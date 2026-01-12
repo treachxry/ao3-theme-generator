@@ -1,9 +1,5 @@
 # AO3 Overengineered Skin
 
-<h2 align="center">
-    [<a href="PREVIEWS.md">Preview screenshots</a>]
-</h2>
-
 AO3 site skin made with way too much effort. This skin replaces the default site skin instead of building on top of it, which gives more freedom for customization, but the installation process becomes much harder than a simple copy and paste.
 
 It would arguably be easier if I could make a public site skin you could use directly, but that's currently impossible due to AO3 removing this option in like 2011, and not touching it ever since. So you'll have to set this up yourself.
