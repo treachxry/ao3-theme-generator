@@ -1,4 +1,4 @@
-function multiplyVariable(values, variable) {
+function multiplyVariable(values: string | string[], variable: string): string {
     if (Array.isArray(values)) {
         if(values.length === 0) {
             return '0';
@@ -14,15 +14,15 @@ function multiplyVariable(values, variable) {
     return `calc(${values} * var(${variable}))`;
 }
 
-function density(...values) {
+function density(...values: string[]): string {
     return multiplyVariable(values, '--ui-density');
 }
 
-function round(...values) {
+function round(...values: string[]): string {
     return multiplyVariable(values, '--ui-roundness');
 }
 
-function alpha(color, opacity) {
+function alpha(color: string, opacity: string): string {
     if(opacity === undefined) {
         return color;
     }

@@ -1,11 +1,11 @@
 import { mkdir, writeFile } from "fs/promises";
 import { join } from "path";
-import { buildStyleSheets } from "./functions/build.js";
+import { processStyleSheets } from "./process.js";
 
-const INPUT_PATH = 'src/inputs';
+const INPUT_PATH = 'src/assets/inputs';
 const OUTPUT_PATH = '../dist';
 
-const stylesheets = await buildStyleSheets(INPUT_PATH);
+const stylesheets = await processStyleSheets(INPUT_PATH);
 
 await mkdir(OUTPUT_PATH, {recursive: true});
 
