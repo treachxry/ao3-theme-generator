@@ -1,8 +1,8 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+  "$schema": "../node_modules/wrangler/config-schema.json",
   "name": "ao3-theme-generator",
-  "compatibility_date": "2025-09-27",
-  "main": "src/server.ts",
+  "compatibility_date": "2026-01-14",
+  "main": "src/main.ts",
   "compatibility_flags": [
     "nodejs_compat"
   ],
@@ -10,7 +10,6 @@
     "enabled": true
   },
   "assets": {
-    "run_worker_first": true,
     "directory": "dist/assets",
     "binding": "ASSETS"
   }

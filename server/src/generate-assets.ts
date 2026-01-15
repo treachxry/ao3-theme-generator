@@ -1,14 +1,15 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import postcss from "postcss";
-import { preprocessPlugins } from "./functions/css-plugins.js";
+import { Dirent } from "node:fs";
+import postcss, { Processor } from "postcss";
+import { preprocessPlugins } from "./functions/css-plugins.ts";
 
 const INPUT_PATH = 'src/assets/inputs';
 const OUTPUT_PATH = 'dist/assets';
 
 await main();
 
-async function main() {
+async function main(): Promise<void> {
     const files = await readdir(INPUT_PATH, {withFileTypes: true});
     const postCss = postcss(preprocessPlugins);
 
@@ -16,7 +17,7 @@ async function main() {
     await Promise.all(files.map(file => preprocessStyleSheet(postCss, file)));
 }
 
-async function preprocessStyleSheet(postCss, file) {
+async function preprocessStyleSheet(postCss: Processor, file: Dirent): Promise<void> {
     if(!file.isFile()) {
         return;
     }

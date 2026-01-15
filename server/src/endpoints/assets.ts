@@ -1,7 +1,6 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { AppContext, SkinFile, Variable } from "@/types";
-import { corsHeaders } from "@/middleware/cors";
+import { AppContext, SkinFile, Variable } from "../types";
 
 export class Assets extends OpenAPIRoute {
     schema = {
@@ -26,6 +25,10 @@ export class Assets extends OpenAPIRoute {
         const assetsUrl = new URL(`/media-${name}.css`, c.req.url);
         const res = await c.env.ASSETS.fetch(assetsUrl);
         const content = await res.text();
+
+        if(!res.ok) {
+            return;
+        }
 
         return  {
             name: name,
@@ -57,12 +60,9 @@ export class Assets extends OpenAPIRoute {
                 await this.fetchAsset(c, 'narrow', 'only screen and (max-width: 42em)', 'recommended'),
                 await this.fetchAsset(c, 'aural', 'speech', 'optional'),
                 await this.fetchAsset(c, 'print', 'print', 'optional'),
-            ]
+            ].filter(x => x !== undefined)
         };
 
-        return Response.json(result, {
-            status: 200,
-            headers: corsHeaders
-        });
+        return Response.json(result);
     }
 }
