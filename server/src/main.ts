@@ -1,7 +1,7 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { Assets } from "./endpoints/assets";
-import { Generate } from "./endpoints/generate";
+import { Assets } from "@/endpoints/assets";
+import { Generate } from "@/endpoints/generate";
 
 const app = new Hono<{ Bindings: Env }>();
 

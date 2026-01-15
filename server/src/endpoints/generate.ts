@@ -1,8 +1,9 @@
 import { Bool, OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { AppContext } from "../types";
+import { AppContext } from "@/types";
 import postcss from "postcss";
-import { processPlugins } from "../functions/css-plugins.ts";
+import { processPlugins } from "@/functions/css-plugins.ts";
+import { corsHeaders } from "@/middleware/cors.ts";
 
 export class Generate extends OpenAPIRoute {
 	schema = {
@@ -76,6 +77,8 @@ export class Generate extends OpenAPIRoute {
 		return Response.json({
 			before: content,
 			after: result.css
+		}, {
+			headers: corsHeaders
 		})
 	}
 }

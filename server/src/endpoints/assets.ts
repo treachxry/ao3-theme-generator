@@ -1,6 +1,7 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { AppContext, SkinFile, Variable } from "../types";
+import { AppContext, SkinFile, Variable } from "@/types";
+import { corsHeaders } from "@/middleware/cors.ts";
 
 export class Assets extends OpenAPIRoute {
     schema = {
@@ -30,7 +31,7 @@ export class Assets extends OpenAPIRoute {
             return;
         }
 
-        return  {
+        return {
             name: name,
             css: content,
             media: media,
@@ -63,6 +64,8 @@ export class Assets extends OpenAPIRoute {
             ].filter(x => x !== undefined)
         };
 
-        return Response.json(result);
+        return Response.json(result, {
+            headers: corsHeaders
+        });
     }
 }

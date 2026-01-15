@@ -25,7 +25,7 @@
                 content.value = `${res.status} ${res.statusText}`;
             }
             else {
-                content.value = e?.message ?? '?';
+                content.value = (e as any)?.message ?? '?';
             }
         }
     }

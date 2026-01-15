@@ -14,7 +14,10 @@
     "types": [
       "worker-configuration.d.ts",
       "@types/node"
-    ]
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": [
     "src",
