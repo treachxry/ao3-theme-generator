@@ -1,49 +1,90 @@
 <script setup lang="ts">
-    import { ref } from "vue";
-    import RenderedContent from "@/components/RenderedContent.vue";
+    import { computed, onMounted, ref } from "vue";
+    import RenderedAo3Page from "@/components/RenderedAo3Page.vue";
+    import { fetchAPI } from "@/functions/api.ts";
+    import { AssetsResponse, PageResponse } from "ao3-tg-shared";
+    import AppFooter from "@/components/AppFooter.vue";
 
-    const content = ref();
+    const assets = ref<AssetsResponse>();
+    const pages = ref<PageResponse>();
 
-    async function fetchAPI(path: string) {
-        const base = import.meta.env.DEV ? __API_URL_DEV__ : __API_URL__;
-        const url = new URL(path, base);
+    const variableValues = ref<string[]>();
 
-        return fetch(url);
+    const stylesheets = computed<string[]>(() => {
+        if(!assets.value) {
+            return [];
+        }
+
+        const variableStrings = [
+            `--color-base-content: ${variableValues.value}`,
+            ...assets.value.variables.map((v, i) => `${v.key}: ${variableValues.value ? (variableValues.value[i] ?? v.default) : v.default}${v.unit ?? ''}`)
+        ];
+
+        return [
+            `*{${variableStrings.join(';')}}`,
+            ...assets.value.stylesheets.map(s => `@media ${s.media} {${s.contents}}`)
+        ];
+    });
+
+    onMounted(async () => {
+        await getPage();
+        await getAssets();
+    })
+
+    async function getPage() {
+        const response = await fetchAPI('/api/pages');
+
+        if(!response.ok) {
+            console.error('Request failed:', response.statusText);
+            return;
+        }
+
+        pages.value = await response.json();
     }
 
-    async function assignContent(url: string) {
-        let res;
+    async function getAssets() {
+        const response = await fetchAPI('/api/assets');
 
-        try {
-            res = await fetchAPI(url);
+        if(!response.ok) {
+            console.error('Request failed:', response.statusText);
+            return;
+        }
 
-            if(res.ok) {
-                content.value = await res.json();
-            }
-        }
-        catch(e) {
-            if(res) {
-                content.value = `${res.status} ${res.statusText}`;
-            }
-            else {
-                content.value = (e as any)?.message ?? '?';
-            }
-        }
+        assets.value = await response.json();
+        variableValues.value = assets.value?.variables.map(v => v.default) ?? [];
     }
 </script>
 
 <template>
-    <main>
-        <div>
-            <button @click="assignContent('/api/assets')">Get assets</button>
-            <button @click="assignContent('/api/generate')">Generate default theme</button>
+    <main class="flex flex-col gap-8 min-h-full overflow-auto">
+        <div v-if="assets && variableValues" class="mt-4 flex gap-x-6 gap-y-2 flex-wrap px-6 py-2 bg-base-300">
+            <fieldset v-for="(v, i) in assets.variables" class="fieldset w-40">
+                <legend class="fieldset-legend">{{ v.description }}</legend>
+                <span class="flex items-center">
+                    <input
+                        :type="v.type"
+                        :placeholder="v.default"
+                        v-model="variableValues[i]"
+                        class="input input-sm"
+                    />
+                    <span v-if="v.unit" class="w-10 ps-1">{{ v.unit }}</span>
+                </span>
+            </fieldset>
         </div>
-        <pre>{{ JSON.stringify(content, null, 4) }}</pre>
-        <div v-if="content">
-            <rendered-content
-                :html="content.html"
-                :css="content.css"
-            />
+
+        <rendered-ao3-page
+            v-if="pages"
+            :url="pages.url"
+            :html="pages.html"
+            :stylesheets="stylesheets"
+            class="mx-4"
+        />
+
+        <div class="mx-12 text-3xl text-error flex items-center justify-center gap-12">
+            <div>Work in progress, most things aren't functional!</div>
+            <img src="/hopital.jpeg" width="240" class="object-contain" alt="caffeine is my primary source of sustenance"/>
         </div>
+
+        <app-footer/>
     </main>
 </template>

@@ -1,0 +1,5 @@
+{
+  "name": "ao3-tg-shared",
+  "type": "module",
+  "types": "src/index.ts"
+}

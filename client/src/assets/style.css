@@ -1,18 +1,7 @@
-html, body {
-    background: #222324;
-    color: #eee;
+@import "tailwindcss";
+@plugin "daisyui";
+
+html, body, #app {
+    height: 100%;
     position: relative;
-}
-
-body {
-    padding: 1rem;
-}
-
-pre {
-    padding: 0.5rem;
-    border: 2px solid #999;
-}
-
-button {
-    margin-right: 1rem;
 }

@@ -5,7 +5,8 @@
   "private": true,
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "shared"
   ],
   "scripts": {
     "dev": "npm run dev:server & npm run dev:client",

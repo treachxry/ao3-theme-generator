@@ -5,6 +5,7 @@
     "strict": true,
     "erasableSyntaxOnly": true,
     "noUncheckedSideEffectImports": true,
+    "verbatimModuleSyntax": false,
     "types": [
       "vite/client"
     ],

@@ -4,10 +4,9 @@ import { join } from "node:path";
 import { encodePageName } from "../functions/encode.ts";
 
 const previewConfig = {
-    site: 'https://www.archiveofourown.com',
+    site: 'https://archiveofourown.org',
     pages: [
-        '/',
-        '/works'
+        '/'
     ]
 }
 
@@ -33,7 +32,7 @@ async function fetchPages() {
             cleanDocument(dom);
             pages.set(page, dom);
 
-            console.log(`Prepared "${page}"`);
+            console.log(`Prepared URL "${page}"`);
         }
         catch(err) {
             console.error(`Error processing ${page}:`, err instanceof Error ? err.message : String(err));

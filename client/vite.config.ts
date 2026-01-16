@@ -1,5 +1,6 @@
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import { fileURLToPath } from "node:url";
 
@@ -12,7 +13,8 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        vueDevTools()
+        vueDevTools(),
+        tailwindcss()
     ],
     define: {
         __API_URL_DEV__: JSON.stringify('http://localhost:8787'),
