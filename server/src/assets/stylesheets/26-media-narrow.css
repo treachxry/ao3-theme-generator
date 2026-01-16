@@ -12,7 +12,7 @@ h1, h2, h3 {
 /* non-JavaScript states
 .narrow-shown: should be displayed when this stylesheet is in use  */
 
-body .narrow-shown {
+.narrow-shown {
     display: block;
 }
 

@@ -36,7 +36,7 @@ span.unread, .replied, span.claimed, .actions span.defaulted {
     font-weight: 700;
 }
 
-body .hidden, .actions .hidden, .actions a.hidden, #dashboard .hidden {
+.hidden, .actions .hidden, .actions a.hidden, #dashboard .hidden {
     display: none;
 }
 

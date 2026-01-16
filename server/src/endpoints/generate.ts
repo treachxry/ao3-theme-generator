@@ -4,6 +4,7 @@ import { AppContext } from "@/types";
 import postcss from "postcss";
 import { processPlugins } from "@/functions/css-plugins.ts";
 import { corsHeaders } from "@/middleware/cors.ts";
+import { encodePageName } from "../functions/encode.ts";
 
 export class Generate extends OpenAPIRoute {
 	schema = {
@@ -26,7 +27,7 @@ export class Generate extends OpenAPIRoute {
 	};
 
 	async handle(c: AppContext) {
-		const assetsUrl = new URL(`/media-midsize.css`, c.req.url);
+		const assetsUrl = new URL(`/media-all.css`, c.req.url);
 		const res = await c.env.ASSETS.fetch(assetsUrl);
 		const content = await res.text();
 
@@ -71,12 +72,16 @@ export class Generate extends OpenAPIRoute {
 		`;
 
 		const file = theme + content;
-
 		const result = await postcss(processPlugins).process(file, {from: undefined});
 
+		const path = '/';
+		const pageUrl = new URL(`/${encodePageName(path)}`, c.req.url);
+		const pageRes = await c.env.ASSETS.fetch(pageUrl);
+		const pageContent = await pageRes.text();
+
 		return Response.json({
-			before: content,
-			after: result.css
+			html: pageContent,
+			css: result.css
 		}, {
 			headers: corsHeaders
 		})

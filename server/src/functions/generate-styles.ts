@@ -2,14 +2,12 @@ import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { Dirent } from "node:fs";
 import postcss, { Processor } from "postcss";
-import { preprocessPlugins } from "./functions/css-plugins.ts";
+import { preprocessPlugins } from "./css-plugins.ts";
 
 const INPUT_PATH = 'src/assets/inputs';
-const OUTPUT_PATH = 'dist/assets';
+const OUTPUT_PATH = '.server-assets';
 
-await main();
-
-async function main(): Promise<void> {
+export async function generateStyles(): Promise<void> {
     const files = await readdir(INPUT_PATH, {withFileTypes: true});
     const postCss = postcss(preprocessPlugins);
 
