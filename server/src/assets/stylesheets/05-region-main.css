@@ -30,7 +30,7 @@
     }
 
     &.errors {
-        background: url("/images/ao3_logos/sadface.png") top right no-repeat;
+        background: rewrite-url("/images/ao3_logos/sadface.png") top right no-repeat;
 
         h2 {
             display: block;
@@ -43,14 +43,14 @@
     }
 
     &.error-502 {
-        background: url("/images/ao3_logos/ao3-502.png") top right no-repeat;
+        background: rewrite-url("/images/ao3_logos/ao3-502.png") top right no-repeat;
     }
 
     &.error-503-maintenance {
-        background: url("/images/ao3_logos/logo-ruby.png") top right no-repeat;
+        background: rewrite-url("/images/ao3_logos/logo-ruby.png") top right no-repeat;
     }
 
     &.session {
-        background: url("/images/logo.png") 0.5em 3em no-repeat;
+        background: rewrite-url("/images/logo.png") 0.5em 3em no-repeat;
     }
 }

@@ -1,18 +1,15 @@
 import { OpenAPIRoute, contentJson } from "chanfana";
 import { z } from "zod";
-import { AppContext, fetchAsset, sheets } from "@/types";
+import { AppContext, fetchStyleSheet, sheets } from "@/types";
 import postcss from "postcss";
-import { processPlugins } from "@/functions/css-plugins.ts";
+import { getPlugins } from "@/functions/css-plugins.ts";
 import { StyleSheetInfo, GenerateResponse } from "ao3-tg-shared";
 
 export class Generate extends OpenAPIRoute {
     schema = {
         request: {
             body: contentJson(z.array(z.array(z.string()))),
-        },
-        responses: {
-            // ... responses
-        },
+        }
     };
 
     async handle(c: AppContext) {
@@ -22,10 +19,12 @@ export class Generate extends OpenAPIRoute {
         // TODO: this is NOT safe
         const variableSheet = `:root{${body.map(i => `${i[0]}: ${i[1]}`).join(';')}}`;
 
-        const postCss = postcss(processPlugins);
+        const postCss = postcss(getPlugins({
+            step: 'process'
+        }));
 
         const stylesheets: StyleSheetInfo[] = await Promise.all(sheets.map(async s => {
-            const rawSheet = await fetchAsset(c, s);
+            const rawSheet = await fetchStyleSheet(c, s);
             const merged = variableSheet + (rawSheet?.contents ?? '');
 
             const results = await postCss.process(merged, {from: undefined});

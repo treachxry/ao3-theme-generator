@@ -40,15 +40,15 @@
 }
 
 .skins .primary .icon {
-    background: url("/images/imageset.png") 0 -175px;
+    background: rewrite-url("/images/imageset.png") 0 -175px;
 }
 
 .admin .primary .icon {
-    background: url("/images/imageset.png") 100px -75px;
+    background: rewrite-url("/images/imageset.png") 100px -75px;
 }
 
 .tag .primary .icon, .tagset .primary .icon {
-    background: url("/images/imageset.png") 0 -275px;
+    background: rewrite-url("/images/imageset.png") 0 -275px;
 }
 
 .wrangler .primary .icon {

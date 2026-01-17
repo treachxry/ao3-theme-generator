@@ -2,20 +2,23 @@ import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { Dirent } from "node:fs";
 import postcss, { Processor } from "postcss";
-import { preprocessPlugins } from "./css-plugins.ts";
+import { getPlugins } from "./css-plugins.ts";
 
 const INPUT_PATH = 'src/assets/inputs';
-const OUTPUT_PATH = '.server-assets';
 
-export async function generateStyles(): Promise<void> {
+export async function generateStyles(outputDir: string, fixUrls: boolean): Promise<void> {
+    const postCss = postcss(getPlugins({
+        step: 'prepare',
+        baseUrl: fixUrls ? '/ao3-theme-generator' : undefined
+    }));
+
     const files = await readdir(INPUT_PATH, {withFileTypes: true});
-    const postCss = postcss(preprocessPlugins);
 
-    await mkdir(OUTPUT_PATH, {recursive: true});
-    await Promise.all(files.map(file => preprocessStyleSheet(postCss, file)));
+    await mkdir(outputDir, {recursive: true});
+    await Promise.all(files.map(file => preprocessStyleSheet(postCss, file, outputDir)));
 }
 
-async function preprocessStyleSheet(postCss: Processor, file: Dirent): Promise<void> {
+async function preprocessStyleSheet(postCss: Processor, file: Dirent, outputDir: string): Promise<void> {
     if(!file.isFile()) {
         return;
     }
@@ -27,7 +30,7 @@ async function preprocessStyleSheet(postCss: Processor, file: Dirent): Promise<v
         from: inputPath
     });
 
-    const outputPath = join(OUTPUT_PATH, file.name);
+    const outputPath = join(outputDir, file.name);
 
     await writeFile(outputPath, processed.css);
 }

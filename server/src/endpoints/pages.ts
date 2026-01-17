@@ -1,6 +1,5 @@
 import { OpenAPIRoute } from "chanfana";
 import { AppContext } from "@/types";
-import { corsHeaders } from "@/middleware/cors.ts";
 import { encodePageName } from "../functions/encode.ts";
 import { PageResponse } from "ao3-tg-shared";
 
@@ -16,8 +15,6 @@ export class Pages extends OpenAPIRoute {
             html: pageContent
         };
 
-        return Response.json(result, {
-            headers: corsHeaders
-        })
+        return Response.json(result);
     }
 }

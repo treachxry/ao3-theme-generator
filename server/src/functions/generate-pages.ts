@@ -1,12 +1,14 @@
 import { JSDOM } from "jsdom";
-import {writeFile} from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { encodePageName } from "../functions/encode.ts";
 
-const previewConfig = {
-    site: 'https://archiveofourown.org',
+const config = {
+    host: 'https://archiveofourown.org',
+    hostname: 'archiveofourown.org',
     pages: [
-        '/'
+        '/',
+        '/works'
     ]
 }
 
@@ -24,9 +26,9 @@ export async function generatePages() {
 async function fetchPages() {
     const pages = new Map();
 
-    for(const page of previewConfig.pages) {
+    for(const page of config.pages) {
         try {
-            const url = previewConfig.site + page;
+            const url = config.host + page;
             const dom = await createDom(url);
 
             cleanDocument(dom);
@@ -57,18 +59,46 @@ async function createDom(url: string): Promise<JSDOM> {
 function cleanDocument(dom: JSDOM): void {
     const doc = dom.window.document;
 
-    doc.querySelectorAll('head')
-        .forEach(el => el.remove());
+    // remove head element
+    doc.querySelectorAll('head').forEach(el => {
+        el.remove();
+    });
 
     // remove scripts
-    doc.querySelectorAll('script')
-        .forEach(el => el.remove());
+    doc.querySelectorAll('script').forEach(el => {
+        el.remove();
+    });
 
     // remove referenced stylesheets
-    doc.querySelectorAll('link[rel="stylesheet"]')
-        .forEach(el => el.remove());
+    doc.querySelectorAll('link[rel="stylesheet"]').forEach(el => {
+        el.remove();
+    });
 
     // remove inline stylesheets
-    doc.querySelectorAll('style')
-        .forEach(el => el.remove());
+    doc.querySelectorAll('style').forEach(el => {
+        el.remove();
+    });
+
+    // fix image paths
+    doc.querySelectorAll('img[src^="/images"]').forEach(el => {
+        const element = el as HTMLImageElement;
+        const url = new URL(element.src);
+
+        element.src = `/ao3-theme-generator${url.pathname}`;
+    });
+
+    // fix navigation links
+    doc.querySelectorAll('a[href]').forEach(el => {
+        const element = el as HTMLLinkElement;
+        const url = new URL(element.href);
+
+        element.removeAttribute('href');
+
+        if(url.hostname !== config.hostname) {
+            return;
+        }
+
+        element.dataset.navLink = 'true';
+        element.dataset.navHref = url.pathname;
+    });
 }

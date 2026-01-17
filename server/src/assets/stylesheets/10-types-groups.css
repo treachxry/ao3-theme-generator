@@ -137,7 +137,7 @@ dl.index dd .userstuff p {
 }
 
 a.rss span {
-    background: url("/images/imageset.png") no-repeat -150px -275px;
+    background: rewrite-url("/images/imageset.png") no-repeat -150px -275px;
     padding-left: 16px;
 }
 
@@ -190,7 +190,7 @@ span.series .position + .divider:after {
 }
 
 p.kudos {
-    background: url("/images/imageset.png") no-repeat -111px -580px;
+    background: rewrite-url("/images/imageset.png") no-repeat -111px -580px;
     padding: density(2, 2, 2) 60px;
     margin: density(16, 0);
     min-height: 50px;

@@ -114,7 +114,7 @@ form.filters {
     }
 
     .expander {
-        background: url("/images/arrow-right.gif") left center no-repeat;
+        background: rewrite-url("/images/arrow-right.gif") left center no-repeat;
         border: none;
         height: 100%;
         padding: density(2, 0, 2, 8);
@@ -133,7 +133,7 @@ form.filters {
 }
 
 .filters .expanded .expander {
-    background-image: url("/images/arrow-down.gif");
+    background-image: rewrite-url("/images/arrow-down.gif");
 }
 
 .filters .expandable, .filters .group dd.autocomplete {

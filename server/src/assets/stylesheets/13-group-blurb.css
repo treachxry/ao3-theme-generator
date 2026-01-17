@@ -144,85 +144,85 @@ li.blurb:after, .blurb .blurb:after {
 /* icon image replacement */
 .required-tags {
     .rating-general-audience {
-        background: url("/images/imageset.png") -50px -25px;
+        background: rewrite-url("/images/imageset.png") -50px -25px;
     }
 
     .rating-explicit {
-        background: url("/images/imageset.png") -25px -25px;
+        background: rewrite-url("/images/imageset.png") -25px -25px;
     }
 
     .rating-mature {
-        background: url("/images/imageset.png") -75px -25px;
+        background: rewrite-url("/images/imageset.png") -75px -25px;
     }
 
     .rating-notrated, .category-none, .warning-no, .status .count {
-        background: url("/images/imageset.png") -150px 0;
+        background: rewrite-url("/images/imageset.png") -150px 0;
     }
 
     .rating-teen {
-        background: url("/images/imageset.png") 0 -25px;
+        background: rewrite-url("/images/imageset.png") 0 -25px;
     }
 
     .category-femslash {
-        background: url("/images/imageset.png") -25px 0;
+        background: rewrite-url("/images/imageset.png") -25px 0;
     }
 
     .category-gen {
-        background: url("/images/imageset.png") -50px 0;
+        background: rewrite-url("/images/imageset.png") -50px 0;
     }
 
     .category-slash {
-        background: url("/images/imageset.png") 0 0;
+        background: rewrite-url("/images/imageset.png") 0 0;
     }
 
     .category-het {
-        background: url("/images/imageset.png") -75px 0;
+        background: rewrite-url("/images/imageset.png") -75px 0;
     }
 
     .category-multi {
-        background: url("/images/imageset.png") -100px -0px;
+        background: rewrite-url("/images/imageset.png") -100px -0px;
     }
 
     .category-other {
-        background: url("/images/imageset.png") -125px 0;
+        background: rewrite-url("/images/imageset.png") -125px 0;
     }
 
     .complete-no {
-        background: url("/images/imageset.png") -100px -25px;
+        background: rewrite-url("/images/imageset.png") -100px -25px;
     }
 
     .complete-yes {
-        background: url("/images/imageset.png") -175px -25px;
+        background: rewrite-url("/images/imageset.png") -175px -25px;
     }
 
     .warning-yes {
-        background: url("/images/imageset.png") -150px -25px;
+        background: rewrite-url("/images/imageset.png") -150px -25px;
     }
 
     .warning-choosenotto {
-        background: url("/images/imageset.png") -125px -25px;
+        background: rewrite-url("/images/imageset.png") -125px -25px;
     }
 
     .external-work {
-        background: url("/images/imageset.png") -75px -50px;
+        background: rewrite-url("/images/imageset.png") -75px -50px;
     }
 }
 
 .status {
     .private .text {
-        background: url("/images/imageset.png") -175px -50px;
+        background: rewrite-url("/images/imageset.png") -175px -50px;
     }
 
     .public {
-        background: url("/images/imageset.png") -125px -50px;
+        background: rewrite-url("/images/imageset.png") -125px -50px;
     }
 
     .hidden {
-        background: url("/images/imageset.png") -150px -50px;
+        background: rewrite-url("/images/imageset.png") -150px -50px;
     }
 
     .rec {
-        background: url("/images/imageset.png") -100px -50px;
+        background: rewrite-url("/images/imageset.png") -100px -50px;
     }
 }
 
@@ -255,15 +255,15 @@ eg collections, users, skins, instead of the 4-icon list
 }
 
 .index .skins .icon {
-    background: url("/images/imageset.png") 0 -580px;
+    background: rewrite-url("/images/imageset.png") 0 -580px;
 }
 
 .index .mystery .icon {
-    background: url("/images/imageset.png") -110px -525px;
+    background: rewrite-url("/images/imageset.png") -110px -525px;
 }
 
 .index .tag .icon, .index .tagset .icon {
-    background: url("/images/imageset.png") -55px -580px;
+    background: rewrite-url("/images/imageset.png") -55px -580px;
 }
 
 .picture .icon img, .index .picture .icon {

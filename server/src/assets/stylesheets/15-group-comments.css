@@ -30,12 +30,12 @@
     /* placeholder icons for unknown users */
     .icon {
         .anonymous {
-            background: url("/images/imageset.png") no-repeat -0px -735px;
+            background: rewrite-url("/images/imageset.png") no-repeat -0px -735px;
             display: block;
         }
 
         .visitor {
-            background: url("/images/imageset.png") no-repeat 0 -635px;
+            background: rewrite-url("/images/imageset.png") no-repeat 0 -635px;
             display: block;
         }
     }
@@ -107,11 +107,11 @@ fieldset.comments {
         width: 75px;
 
         .anonymous {
-            background: url("/images/imageset.png") no-repeat -75px -450px;
+            background: rewrite-url("/images/imageset.png") no-repeat -75px -450px;
         }
 
         .visitor {
-            background: url("/images/imageset.png") no-repeat 0 -450px;
+            background: rewrite-url("/images/imageset.png") no-repeat 0 -450px;
         }
     }
 

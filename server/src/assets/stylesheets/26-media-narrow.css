@@ -152,11 +152,11 @@ h1, h2, h3 {
     width: 55px;
 
     .anonymous {
-        background: url(/images/imageset.png) no-repeat -75px -395px;
+        background: rewrite-url("/images/imageset.png") no-repeat -75px -395px;
     }
 
     .visitor {
-        background: url(/images/imageset.png) no-repeat -130px -395px;
+        background: rewrite-url("/images/imageset.png") no-repeat -130px -395px;
     }
 
     h4.byline {

@@ -407,7 +407,7 @@ a.modal.help {
 }
 
 #modal-bg .loading {
-    background: url(/images/indicator.gif) no-repeat center center;
+    background: rewrite-url("/images/indicator.gif") no-repeat center center;
     height: 124px;
     left: 50%;
     margin: -62px 0 0 -62px;

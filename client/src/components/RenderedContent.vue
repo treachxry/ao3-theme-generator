@@ -42,10 +42,6 @@
                 height: 100%;
                 overflow: auto;
             }
-
-            .__body_placeholder__ > * {
-                pointer-events: none;
-            }
         `);
 
         for(const stylesheet of stylesheets) {
@@ -82,12 +78,5 @@
 <template>
     <div
         ref="container"
-        class="shadow-dom"
     />
 </template>
-
-<style scoped>
-    .shadow-dom {
-        user-select: none;
-    }
-</style>

@@ -198,8 +198,9 @@ export const sheets: StyleSheetFileInfo[] = [
     }
 ];
 
-export async function fetchAsset(c: AppContext, sheet: StyleSheetFileInfo): Promise<StyleSheetInfo | undefined> {
-    const assetsUrl = new URL(sheet.path, c.req.url);
+export async function fetchStyleSheet(c: AppContext, sheet: StyleSheetFileInfo, subdirectory?: string): Promise<StyleSheetInfo | undefined> {
+    const path = subdirectory ? `${subdirectory}${sheet.path}` : sheet.path;
+    const assetsUrl = new URL(path, c.req.url);
     const res = await c.env.ASSETS.fetch(assetsUrl);
     const content = await res.text();
 

@@ -25,6 +25,7 @@
 
         return [
             createRule('*', properties),
+            createRule('[data-nav-link="true"]', [createProperty('cursor', 'pointer')]),
             ...assets.value.stylesheets.map(stylesheet => createMediaQueryWrapped(stylesheet.media, stylesheet.contents))
         ];
     });
