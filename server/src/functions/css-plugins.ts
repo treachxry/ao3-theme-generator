@@ -9,7 +9,7 @@ import postcssDiscardComments from "postcss-discard-comments";
 import postcssNested from "postcss-nested";
 import postcssRewriteURL from "@csstools/postcss-rewrite-url";
 import postcssMinify from "@csstools/postcss-minify";
-import cssFunctions from "./css-functions.ts";
+import cssFunctions from "./css-functions";
 
 export interface PluginOptions {
     step: 'prepare' | 'process'

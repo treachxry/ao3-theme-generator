@@ -5,8 +5,6 @@ export function useReactiveStorage<T>(key: string): Ref<T | null> {
     const result = ref<T | null>(handler.load()) as Ref<T | null>;
 
     watch(result, (value) => {
-        console.log('vlaue changed')
-
         if(value !== null) {
             handler.save(value);
         }

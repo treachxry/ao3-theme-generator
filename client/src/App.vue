@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, onMounted, ref } from "vue";
+    import { computed, onMounted, ref, watch } from "vue";
     import RenderedAo3Page from "@/components/RenderedAo3Page.vue";
     import { fetchAPI } from "@/functions/api.ts";
     import { AssetsResponse, PageResponse, GenerateResponse, createMediaQueryWrapped, createRule, createProperty } from "ao3-tg-shared";
@@ -10,6 +10,7 @@
     const assets = ref<AssetsResponse>();
     const pages = ref<PageResponse>();
     const generated = ref<GenerateResponse>();
+    const url = ref<string>('');
 
     const variableValues = useReactiveStorage<string[]>('tg-values');
 
@@ -20,13 +21,13 @@
 
         const properties = [
             `--color-base-content: ${variableValues.value}`,
-            ...assets.value.variables.map((v, i) => createProperty(v.key,`${variableValues.value ? (variableValues.value[i] ?? v.default) : v.default}${v.unit ?? ''}`))
+            ...assets.value.variables.map((v, i) => createProperty(v.name, `${variableValues.value ? (variableValues.value[i] ?? v.default) : v.default}${v.unit ?? ''}`))
         ];
 
         return [
             createRule('*', properties),
             createRule('[data-nav-link="true"]', [createProperty('cursor', 'pointer')]),
-            ...assets.value.stylesheets.map(stylesheet => createMediaQueryWrapped(stylesheet.media, stylesheet.contents))
+            ...assets.value.stylesheets.map(stylesheet => createMediaQueryWrapped(stylesheet.media, stylesheet.css))
         ];
     });
 
@@ -35,8 +36,16 @@
         await getAssets();
     })
 
-    async function getPage() {
-        const response = await fetchAPI('/api/pages');
+    watch(url, async value => {
+        await getPage(new URL(value).pathname);
+    });
+
+    async function getPage(path: string = '/') {
+        const params = new URLSearchParams({
+            url: path
+        });
+
+        const response = await fetchAPI(`/api/pages?${params}`);
 
         if(!response.ok) {
             console.error('Request failed:', response.statusText);
@@ -44,6 +53,7 @@
         }
 
         pages.value = await response.json();
+        url.value = pages.value?.page.url ?? '';
     }
 
     async function getAssets() {
@@ -95,7 +105,7 @@
         const results: [string, string][] = [];
 
         for(let i = 0; i < assets.value.variables.length; i++) {
-            const key = assets.value.variables[i]!.key;
+            const key = assets.value.variables[i]!.name;
             const value = variableValues.value[i] ?? assets.value.variables[i]!.default;
 
             results.push([key, value])
@@ -106,6 +116,10 @@
 
     function clearGenerated() {
         generated.value = undefined;
+    }
+
+    function updateUrl(value: string) {
+        url.value = value;
     }
 </script>
 
@@ -139,10 +153,11 @@
 
         <rendered-ao3-page
             v-if="pages"
-            :url="pages.url"
-            :html="pages.html"
+            :url="url"
+            :html="pages.page.html"
             :stylesheets="stylesheets"
             class="mx-4"
+            @update-url="updateUrl"
         />
 
         <app-footer/>

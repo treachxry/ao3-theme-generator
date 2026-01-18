@@ -1,217 +1,198 @@
-import type { Context } from "hono";
-import { StyleSheetFileInfo, StyleSheetInfo, StyleSheetVariable } from "ao3-tg-shared";
+import { CssFileInfo, CssVariableInfo } from "ao3-tg-shared";
 
-export type AppContext = Context<{ Bindings: Env }>;
 
-export const variables: StyleSheetVariable[] = [
+
+export const variables: CssVariableInfo[] = [
     {
-        key: '--color-base-100',
+        name: '--color-base-100',
         type: 'color',
         default: 'oklch(16% 0.005 240)',
         description: 'Base color (darkest)'
     },
     {
-        key: '--color-base-200',
+        name: '--color-base-200',
         type: 'color',
         default: 'oklch(20% 0.005 240)',
         description: 'Base color (dark)'
     },
     {
-        key: '--color-base-300',
+        name: '--color-base-300',
         type: 'color',
         default: 'oklch(24% 0.005 240)',
         description: 'Base color (lighter)'
     },
     {
-        key: '--color-base-content',
+        name: '--color-base-content',
         type: 'color',
         default: 'oklch(88% 0.005 245)',
         description: 'Base text color'
     },
     {
-        key: '--color-primary',
+        name: '--color-primary',
         type: 'color',
         default: 'oklch(40% 0.176 29.23)',
         description: 'Primary color'
     },
     {
-        key: '--color-primary-content',
+        name: '--color-primary-content',
         type: 'color',
         default: 'oklch(88% 0.005 245)',
         description: 'Primary text color'
     },
     {
-        key: '--color-secondary',
+        name: '--color-secondary',
         type: 'color',
         default: 'oklch(75% 0.12 60)',
         description: 'Secondary color'
     },
     {
-        key: '--color-secondary-content',
+        name: '--color-secondary-content',
         type: 'color',
         default: 'oklch(14% 0.033 60)',
         description: 'Secondary text color'
     },
     {
-        key: '--color-accent',
+        name: '--color-accent',
         type: 'color',
         default: 'oklch(71% 0.12 310)',
         description: 'Accent color'
     },
     {
-        key: '--color-accent-content',
+        name: '--color-accent-content',
         type: 'color',
         default: 'oklch(14% 0.033 300)',
         description: 'Accent text color'
     },
     {
-        key: '--color-neutral',
+        name: '--color-neutral',
         type: 'color',
         default: 'oklch(27% 0.01 240)',
         description: 'Neutral color'
     },
     {
-        key: '--color-neutral-content',
+        name: '--color-neutral-content',
         type: 'color',
         default: 'oklch(70% 0.01 240)',
         description: 'Neutral text color'
     },
     {
-        key: '--color-info',
+        name: '--color-info',
         type: 'color',
         default: 'oklch(85% 0.085 206)',
         description: 'Info color'
     },
     {
-        key: '--color-info-content',
+        name: '--color-info-content',
         type: 'color',
         default: 'oklch(17% 0.017 206)',
         description: 'Info text color'
     },
     {
-        key: '--color-success',
+        name: '--color-success',
         type: 'color',
         default: 'oklch(85% 0.085 145)',
         description: 'Success color'
     },
     {
-        key: '--color-success-content',
+        name: '--color-success-content',
         type: 'color',
         default: 'oklch(17% 0.015 145)',
         description: 'Success text color'
     },
     {
-        key: '--color-warning',
+        name: '--color-warning',
         type: 'color',
         default: 'oklch(85% 0.085 75)',
         description: 'Warning color'
     },
     {
-        key: '--color-warning-content',
+        name: '--color-warning-content',
         type: 'color',
         default: 'oklch(17% 0.015 75)',
         description: 'Warning text color'
     },
     {
-        key: '--color-error',
+        name: '--color-error',
         type: 'color',
         default: 'oklch(85% 0.085 16)',
         description: 'Error color'
     },
     {
-        key: '--color-error-content',
+        name: '--color-error-content',
         type: 'color',
         default: 'oklch(17% 0.015 16)',
         description: 'Error text color'
     },
     {
-        key: '--ui-density',
+        name: '--ui-density',
         type: 'number',
         default: '0.125',
         unit: 'rem',
         description: 'Space between elements'
     },
     {
-        key: '--ui-roundness',
+        name: '--ui-roundness',
         type: 'number',
         default: '0.125',
         unit: 'rem',
         description: 'Border radius'
     },
     {
-        key: '--ui-border',
+        name: '--ui-border',
         type: 'number',
         default: '1',
         unit: 'px',
         description: 'Border width'
     },
     {
-        key: '--font-serif',
+        name: '--font-serif',
         type: 'text',
         default: "'Georgia', serif",
         description: 'Serif font'
     },
     {
-        key: '--font-sans',
+        name: '--font-sans',
         type: 'text',
         default: "'Lucida Grande', 'Lucida Sans Unicode', 'Verdana', 'Helvetica', sans-serif, 'GNU Unifont'",
         description: 'Sans-serif font'
     },
     {
-        key: '--font-mono',
+        name: '--font-mono',
         type: 'text',
         default: "'Monaco', 'Consolas', 'Courier', monospace",
         description: 'Monospace font'
     }
 ];
 
-export const sheets: StyleSheetFileInfo[] = [
+export const sheets: CssFileInfo[] = [
     {
-        name: 'General',
+        description: 'General',
         media: 'all',
-        path: '/media-all.css',
+        filename: 'media-all.css',
         importance: 'required'
     },
     {
-        name: 'Midsize',
+        description: 'Midsize',
         media: 'only screen and (max-width: 62em)',
-        path: '/media-midsize.css',
+        filename: 'media-midsize.css',
         importance: 'recommended'
     },
     {
-        name: 'Narrow',
+        description: 'Narrow',
         media: 'only screen and (max-width: 42em)',
-        path: '/media-narrow.css',
+        filename: 'media-narrow.css',
         importance: 'recommended'
     },
     {
-        name: 'Aural',
+        description: 'Aural',
         media: 'speech',
-        path: '/media-aural.css',
+        filename: 'media-aural.css',
         importance: 'optional'
     },
     {
-        name: 'Print',
+        description: 'Print',
         media: 'print',
-        path: '/media-print.css',
+        filename: 'media-print.css',
         importance: 'optional'
     }
 ];
-
-export async function fetchStyleSheet(c: AppContext, sheet: StyleSheetFileInfo, subdirectory?: string): Promise<StyleSheetInfo | undefined> {
-    const path = subdirectory ? `${subdirectory}${sheet.path}` : sheet.path;
-    const assetsUrl = new URL(path, c.req.url);
-    const res = await c.env.ASSETS.fetch(assetsUrl);
-    const content = await res.text();
-
-    if(!res.ok) {
-        return;
-    }
-
-    return {
-        name: sheet.name,
-        contents: content,
-        media: sheet.media,
-        importance: sheet.importance
-    };
-}

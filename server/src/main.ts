@@ -1,10 +1,9 @@
 import { fromHono } from "chanfana";
-import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { Hono } from "hono";
 import { Assets } from "@/endpoints/assets";
 import { Generate } from "@/endpoints/generate";
-import { Pages } from "@/endpoints/pages.ts";
-import { Images } from "@/endpoints/images.ts";
+import { Pages } from "@/endpoints/pages";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -22,6 +21,5 @@ const openapi = fromHono(app, {
 openapi.get("/api/assets", Assets);
 openapi.get("/api/pages", Pages);
 openapi.post("/api/generate", Generate);
-openapi.get('/images', Images)
 
 export default app;

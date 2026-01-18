@@ -17,7 +17,6 @@
     "@types/node": "^25.0.0",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/tsconfig": "^0.8.0",
-    "ao3-tg-shared": "*",
     "daisyui": "^5.5.0",
     "gh-pages": "^6.3.0",
     "tailwindcss": "^4.1.18",

@@ -1,59 +1,36 @@
 import { JSDOM } from "jsdom";
-import { writeFile } from "node:fs/promises";
-import { join } from "node:path";
-import { encodePageName } from "../functions/encode.ts";
+import { getAO3Url, writePageAsset } from "@/services/pages.service";
 
-const config = {
-    host: 'https://archiveofourown.org',
-    hostname: 'archiveofourown.org',
-    pages: [
-        '/',
-        '/works'
-    ]
-}
-
-export async function generatePages() {
-    const pages = await fetchPages();
-
-    for(const [url, dom] of pages) {
-        const path = join('.server-assets', encodePageName(url));
-        const html = dom.serialize();
-
-        await writeFile(path, html, 'utf-8');
-    }
-}
-
-async function fetchPages() {
-    const pages = new Map();
-
-    for(const page of config.pages) {
+export async function generatePages(pages: string[]) {
+    for(const page of pages) {
         try {
-            const url = config.host + page;
-            const dom = await createDom(url);
+            const url = new URL(page, getAO3Url());
+            const dom = await createDocument(url);
 
             cleanDocument(dom);
-            pages.set(page, dom);
 
-            console.log(`Prepared URL "${page}"`);
+            const html = dom.serialize();
+
+            await writePageAsset(page, html);
         }
         catch(err) {
             console.error(`Error processing ${page}:`, err instanceof Error ? err.message : String(err));
         }
     }
-
-    return pages;
 }
 
-async function createDom(url: string): Promise<JSDOM> {
-    const res = await fetch(url);
+async function createDocument(url: URL): Promise<JSDOM> {
+    const response = await fetch(url);
 
-    if(!res.ok) {
-        throw new Error(`Failed to fetch resource (${res.status}), ${res.statusText}`);
+    if(!response.ok) {
+        throw new Error(`Failed to fetch resource (${response.status}), ${response.statusText}`);
     }
 
-    const html = await res.text();
+    const html = await response.text();
 
-    return new JSDOM(html, {url});
+    return new JSDOM(html, {
+        url: url.href
+    });
 }
 
 function cleanDocument(dom: JSDOM): void {
@@ -94,7 +71,7 @@ function cleanDocument(dom: JSDOM): void {
 
         element.removeAttribute('href');
 
-        if(url.hostname !== config.hostname) {
+        if(url.host !== dom.window.location.host) {
             return;
         }
 

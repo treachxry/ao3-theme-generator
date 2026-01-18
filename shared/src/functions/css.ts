@@ -13,4 +13,3 @@ export function createRule(rule: string, properties: string[]): string {
 export function mergeRules(rules: string[]): string {
     return rules.join('');
 }
-

@@ -1,20 +1,38 @@
 import { OpenAPIRoute } from "chanfana";
-import { AppContext } from "@/types";
-import { encodePageName } from "../functions/encode.ts";
+import { z } from "zod";
 import { PageResponse } from "ao3-tg-shared";
+import { AppContext } from "@/models/AppContext";
+import { getAO3Url, readPageAsset } from "@/services/pages.service";
 
 export class Pages extends OpenAPIRoute {
-    async handle(c: AppContext) {
-        const path = '/works';
-        const pageUrl = new URL(`/${encodePageName(path)}`, c.req.url);
-        const pageRes = await c.env.ASSETS.fetch(pageUrl);
-        const pageContent = await pageRes.text();
+    schema = {
+        request: {
+            query: z.object({
+                url: z.string()
+            })
+        }
+    };
 
-        const result: PageResponse = {
-            url: `https://archiveofourown.org${path}`,
-            html: pageContent
+    async handle(c: AppContext) {
+        const { query } = await this.getValidatedData<typeof this.schema>();
+
+        const path = query.url;
+        const response = await readPageAsset(c, path);
+        const url = new URL(path, getAO3Url());
+
+        if(!response.ok) {
+            return c.notFound();
+        }
+
+        const html = await response.text();
+
+        const data: PageResponse = {
+            page: {
+                url: url.href,
+                html: html
+            }
         };
 
-        return Response.json(result);
+        return c.json(data);
     }
 }

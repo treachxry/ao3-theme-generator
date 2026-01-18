@@ -1,9 +1,11 @@
 import { OpenAPIRoute, contentJson } from "chanfana";
 import { z } from "zod";
-import { AppContext, fetchStyleSheet, sheets } from "@/types";
 import postcss from "postcss";
-import { getPlugins } from "@/functions/css-plugins.ts";
-import { StyleSheetInfo, GenerateResponse } from "ao3-tg-shared";
+import { getPlugins } from "@/functions/css-plugins";
+import { GenerateResponse, CssFileResult } from "ao3-tg-shared";
+import { AppContext } from "@/models/AppContext";
+import { readServerAsset } from "@/services/assets.service";
+import { sheets } from "@/services/css.service";
 
 export class Generate extends OpenAPIRoute {
     schema = {
@@ -23,24 +25,34 @@ export class Generate extends OpenAPIRoute {
             step: 'process'
         }));
 
-        const stylesheets: StyleSheetInfo[] = await Promise.all(sheets.map(async s => {
-            const rawSheet = await fetchStyleSheet(c, s);
-            const merged = variableSheet + (rawSheet?.contents ?? '');
+        const stylesheets = await Promise.all(sheets.map(async s => {
+            const rawSheet = await fetchStyleSheet(c, s.filename);
+            const merged = variableSheet + (rawSheet ?? '');
 
             const results = await postCss.process(merged, {from: undefined});
 
             return {
-                name: s.name,
-                media: s.media,
-                importance: s.importance,
-                contents: results.css
-            };
+                ...s,
+                css: results.css
+            } satisfies CssFileResult;
         }));
 
         const response: GenerateResponse = {
             stylesheets: stylesheets
         };
 
-        return Response.json(response);
+        return c.json(response);
     }
+}
+
+async function fetchStyleSheet(context: AppContext, filename: string): Promise<string | undefined> {
+    const path = `/${filename}`;
+    const response = await readServerAsset(context, path);
+    const content = await response.text();
+
+    if(!response.ok) {
+        return;
+    }
+
+    return content;
 }

@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npm run prebuild && wrangler dev",
     "deploy": "npm run prebuild && wrangler deploy",
-    "prebuild": "npx ts-node src/prebuild.ts",
+    "prebuild": "tsx src/prebuild.ts",
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
@@ -30,6 +30,7 @@
     "@types/jsdom": "^27.0.0",
     "@types/node": "^25.0.0",
     "jsdom": "^27.4.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.0",
     "wrangler": "^4.59.0"
   }
