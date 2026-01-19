@@ -4,15 +4,21 @@
 
 ## TODO
 
-Functionality
-- navigation links (temporary solution: disabled interactions)
-  - Disabled links are not styled correctly
-  - Simulate navigation by changing the URL
+Styles
+- Download skin as one zip file
+- Link border width variable to styles
 
-Reliability and UX
-- Request validation
+Pages
+- Navigate to any URL
+
+UI/UX
+- Nicer color settings
+- Fix mobile layout
 - Loading screens and progress bars
-- Live install walkthrough with UI
+- Live install walkthrough on UI
+
+Reliability
+- Request validation
 
 ## Installation
 

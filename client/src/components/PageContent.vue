@@ -66,11 +66,27 @@
             </div>
         `;
 
-        setupNavigation();
+        cleanDocument(shadowRoot.value);
+        setupNavigation(shadowRoot.value);
     }
 
-    function setupNavigation() {
-        shadowRoot.value?.querySelector('.__body_placeholder__')?.addEventListener('click', e => {
+    function cleanDocument(root: ShadowRoot): void {
+        // remove stylesheets and scripts
+        root.querySelectorAll('meta, title, script, style, link').forEach(el => {
+            el.remove();
+        });
+
+        // fix image paths
+        root.querySelectorAll('img[src^="/images"]').forEach(el => {
+            const element = el as HTMLImageElement;
+            const url = new URL(element.src);
+
+            element.src = `/ao3-theme-generator${url.pathname}`;
+        });
+    }
+
+    function setupNavigation(root: ShadowRoot) {
+        root.querySelector('.__body_placeholder__')?.addEventListener('click', e => {
             e.preventDefault();
 
             if(!(e.target instanceof Element)) {

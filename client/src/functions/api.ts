@@ -5,10 +5,12 @@ async function fetchAPI(path: string, init?: RequestInit): Promise<Response> {
     return fetch(url, init);
 }
 
-export async function fetchPages(url: string): Promise<Response> {
+export async function fetchPages(url: string, controller: AbortController): Promise<Response> {
     const params = new URLSearchParams({url});
 
-    return fetchAPI(`/api/pages?${params}`);
+    return fetchAPI(`/api/pages?${params}`, {
+        signal: controller.signal
+    });
 }
 
 export async function fetchAssets(): Promise<Response> {

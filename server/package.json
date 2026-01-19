@@ -27,9 +27,7 @@
     "zod": "^4.3.0"
   },
   "devDependencies": {
-    "@types/jsdom": "^27.0.0",
     "@types/node": "^25.0.0",
-    "jsdom": "^27.4.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.0",
     "wrangler": "^4.59.0"

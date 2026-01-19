@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, onMounted, ref } from "vue";
-    import { AssetsResponse, GenerateResponse, createMediaQueryWrapped, createRule, createProperty, CssFileResult, CssVariableInfo } from "ao3-tg-shared";
+    import { AssetsResponse, GenerateResponse, createMediaQueryWrapped, createRule, createProperty, CssFileResult, CssVariableInfo, getHostUrl } from "ao3-tg-shared";
     import { useReactiveStorage } from "@/composables/UseReactiveStorage.ts";
     import { fetchAssets, fetchTheme } from "@/functions/api.ts";
     import Page from "@/components/Page.vue";
@@ -106,11 +106,9 @@
     function getPreviewStyleSheets(stylesheets: CssFileResult[], variables: CssVariableInfo[], variableValues: string[]): string[] {
         const properties = variables.map((v, i) => getVariableProperty(v, variableValues[i]));
         const variableStyleSheet = createRule('*', properties);
-        const fixLinkStyleSheet = createRule('[data-nav-link="true"]', [createProperty('cursor', 'pointer')]);
 
         return [
             variableStyleSheet,
-            fixLinkStyleSheet,
             ...stylesheets.map(s => createMediaQueryWrapped(s.media, s.css))
         ];
     }
@@ -159,7 +157,7 @@
                         <page
                             v-model="url"
                             :stylesheets="previewStyleSheets"
-                            base-url="https://archiveofourown.org"
+                            :base-url="getHostUrl()"
                         />
                     </div>
                 </div>
