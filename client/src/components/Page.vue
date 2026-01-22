@@ -41,6 +41,7 @@
             if(!response.ok) {
                 html.value = undefined;
                 errorMessage.value = `${response.status} ${response.statusText}`;
+                inProgress.value = false;
                 return;
             }
 
@@ -49,10 +50,7 @@
             html.value = data.content;
         }
         catch(e: any) {
-            if(e.name === 'AbortError') {
-
-            }
-            else {
+            if(e.name !== 'AbortError') {
                 console.error(e);
             }
         }

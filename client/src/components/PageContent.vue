@@ -58,19 +58,39 @@
             return;
         }
 
-        shadowRoot.value.innerHTML = `
-            <div class="__html_placeholder__">
-                <div class="__body_placeholder__">
-                    ${html}
-                </div>
-            </div>
-        `;
+        const doc = createDocument(html);
 
-        cleanDocument(shadowRoot.value);
+        cleanHtml(doc.documentElement);
+
+        const wrapper = createWrapper(doc);
+
+        shadowRoot.value.replaceChildren(wrapper);
+
         setupNavigation(shadowRoot.value);
     }
 
-    function cleanDocument(root: ShadowRoot): void {
+    function createDocument(html: string): Document {
+        const parser = new DOMParser();
+        return parser.parseFromString(html, 'text/html');
+    }
+
+    function createWrapper(doc: Document): HTMLElement {
+        const htmlWrapper = document.createElement('div');
+        htmlWrapper.className = '__html_placeholder__';
+
+        const bodyWrapper = document.createElement('div');
+        bodyWrapper.className = '__body_placeholder__';
+
+        htmlWrapper.appendChild(bodyWrapper);
+
+        while (doc.body.firstChild) {
+            bodyWrapper.appendChild(doc.body.firstChild);
+        }
+
+        return htmlWrapper;
+    }
+
+    function cleanHtml(root: Element): void {
         // remove stylesheets and scripts
         root.querySelectorAll('meta, title, script, style, link').forEach(el => {
             el.remove();
