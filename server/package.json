@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "npm run prebuild && wrangler deploy",
+    "check": "wrangler types --check",
     "prebuild": "tsx src/prebuild.ts",
+    "deploy": "npm run prebuild && wrangler deploy",
     "types": "wrangler types"
   },
   "dependencies": {
@@ -30,6 +31,6 @@
     "@types/node": "^25.0.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.0",
-    "wrangler": "^4.59.0"
+    "wrangler": "^4.60.0"
   }
 }

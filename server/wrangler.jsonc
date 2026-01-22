@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/wrangler/config-schema.json",
   "name": "ao3-theme-generator",
-  "compatibility_date": "2026-01-14",
+  "compatibility_date": "2026-01-20",
   "main": "src/main.ts",
   "compatibility_flags": [
     "nodejs_compat"
