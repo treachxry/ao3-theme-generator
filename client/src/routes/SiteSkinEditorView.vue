@@ -5,10 +5,8 @@
     import { useReactiveStorage } from "@/composables/UseReactiveStorage.ts";
     import { fetchAssets, fetchTheme } from "@/functions/api.ts";
     import Page from "@/components/Page.vue";
-    import AppFooter from "@/components/AppFooter.vue";
     import ThemeResult from "@/components/ThemeResult.vue";
     import VariableSettings from "@/components/VariableSettings.vue";
-    import AppHeader from "@/components/AppHeader.vue";
 
     // ------ PAGE PREVIEWS ------
 
@@ -123,50 +121,38 @@
 </script>
 
 <template>
-    <main class="flex flex-col h-full">
-        <app-header/>
-
-        <div class="grow relative">
-            <div class="absolute inset-0 flex">
-                <!-- left panel -->
-                <div class="relative w-72">
-                    <div class="absolute inset-0 overflow-auto">
-                        <div class="sidebar border-base-300 border-e p-3">
-                            <div class="grid gap-2">
-                                <button class="btn btn-sm btn-success btn-outline" @click="generateTheme">Generate theme</button>
-                                <button class="btn btn-sm btn-error btn-outline" @click="clearGenerated">Clear generated theme</button>
-                                <button class="btn btn-sm btn-error btn-outline" @click="resetVariables">Reset variables</button>
-                            </div>
-
-                            <variable-settings
-                                v-if="assetVariables && variableValues"
-                                :variables="assetVariables"
-                                v-model="variableValues"
-                            />
-
-                            <theme-result
-                                v-if="generatedStyleSheets"
-                                :stylesheets="generatedStyleSheets"
-                            />
-                        </div>
-                    </div>
+    <div class="absolute inset-0 flex">
+        <!-- left panel -->
+        <div class="w-72 overflow-auto">
+            <div class="sidebar border-base-300 border-e p-3">
+                <div class="grid gap-2">
+                    <button class="btn btn-sm btn-success btn-outline" @click="generateTheme">Generate theme</button>
+                    <button class="btn btn-sm btn-error btn-outline" @click="clearGenerated">Clear generated theme</button>
+                    <button class="btn btn-sm btn-error btn-outline" @click="resetVariables">Reset variables</button>
                 </div>
 
-                <!-- right panel -->
-                <div class="relative grow">
-                    <div class="absolute inset-0 overflow-auto">
-                        <page
-                            v-model="url"
-                            :stylesheets="previewStyleSheets"
-                            :base-url="getHostUrl()"
-                        />
-                    </div>
-                </div>
+                <variable-settings
+                    v-if="assetVariables && variableValues"
+                    :variables="assetVariables"
+                    v-model="variableValues"
+                />
+
+                <theme-result
+                    v-if="generatedStyleSheets"
+                    :stylesheets="generatedStyleSheets"
+                />
             </div>
         </div>
 
-        <app-footer/>
-    </main>
+        <!-- right panel -->
+        <div class="grow overflow-auto">
+            <page
+                v-model="url"
+                :stylesheets="previewStyleSheets"
+                :base-url="getHostUrl()"
+            />
+        </div>
+    </div>
 </template>
 
 <style scoped>
