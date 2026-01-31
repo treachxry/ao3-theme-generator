@@ -22,7 +22,9 @@ export class Pages extends OpenAPIRoute {
         const response = await fetchPage(url);
 
         if(!response.ok) {
-            throw new Error(`Failed to fetch resource (${response.status}), ${response.statusText}`);
+            c.status(400);
+
+            return c.text(response.statusText);
         }
 
         const html = await response.text();
@@ -31,8 +33,6 @@ export class Pages extends OpenAPIRoute {
             content: html,
             url: url.href,
         };
-
-        //throw new Error()
 
         return c.json(data);
     }

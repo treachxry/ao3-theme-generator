@@ -14,8 +14,8 @@
 
     const url = useReactiveStorage<string>('tg-page-url', () => '/');
 
-    function navigateTo(newUrl: string) {
-        url.value = newUrl;
+    function onNavigate(value: string) {
+        url.value = value;
     }
 </script>
 
@@ -23,7 +23,7 @@
     <div class="mockup-browser rounded-none relative">
         <div class="mockup-browser-toolbar">
             <div class="flex gap-2 mx-auto items-center">
-                <button class="btn btn-ghost p-0 h-auto" @click="navigateTo('/')">
+                <button class="btn btn-ghost p-0 h-auto" @click="onNavigate('/')">
                     <house :size="18"/>
                 </button>
 
@@ -42,7 +42,7 @@
                         <browser-body
                             :url="url"
                             :stylesheets="stylesheets"
-                            @navigate="navigateTo"
+                            :on-navigate="onNavigate"
                         />
                         <template #fallback>
                             <div class="my-8">

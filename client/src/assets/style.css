@@ -15,15 +15,3 @@ html, body, #app {
 .fade-enter-from, .fade-leave-to {
     opacity: 0;
 }
-
-.fade-group-enter-active, .fade-group-leave-active {
-    transition: opacity 250ms ease;
-}
-
-.fade-group-enter-from, .fade-group-leave-to {
-    opacity: 0;
-}
-
-.fade-group-leave-active {
-    position: absolute;
-}

@@ -12,6 +12,6 @@ const routes = [
 ];
 
 export const router = createRouter({
-    history: createWebHistory('/ao3-theme-generator'),
+    history: createWebHistory(__URL_BASE__),
     routes: routes
 })

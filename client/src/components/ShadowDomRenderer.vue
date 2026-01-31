@@ -1,39 +1,62 @@
 <script setup lang="ts">
     import { ref, useTemplateRef, watch, onMounted } from "vue";
-    import { setupNavigation, applyCss } from "@/functions/shadow-utils";
 
-    const {html, stylesheets} = defineProps<{
-        html: HTMLElement
-        stylesheets: string[]
+    const {rootNode, styleSheets} = defineProps<{
+        rootNode: Node
+        styleSheets: CSSStyleSheet[]
     }>();
 
     const emits = defineEmits<{
         (e: 'navigate', url: string): void
-        (e: 'ready'): void
     }>();
 
     const containerEl = useTemplateRef('container');
     const shadowRoot = ref<ShadowRoot>();
 
-    onMounted(async () => {
+    onMounted(onInitialize);
+    watch(() => styleSheets, onStyleChange);
+
+    function onInitialize(): void {
         if(!containerEl.value) {
             return;
         }
 
         shadowRoot.value = containerEl.value.attachShadow({mode: 'open'});
-        shadowRoot.value.replaceChildren(html);
+        shadowRoot.value.replaceChildren(rootNode);
+        shadowRoot.value.addEventListener('click', onClickEvent);
 
-        setupNavigation(shadowRoot.value, url => emits('navigate', url));
-        await applyCss(shadowRoot.value, stylesheets);
+        onStyleChange(styleSheets);
+    }
 
-        emits('ready');
-    });
+    function onNavigate(url: string): void {
+        emits('navigate', url);
+    }
 
-    watch(() => stylesheets, async () => {
-        if(shadowRoot.value) {
-            await applyCss(shadowRoot.value, stylesheets);
+    function onStyleChange(stylesheets: CSSStyleSheet[]): void {
+        if(!shadowRoot.value) {
+            return;
         }
-    });
+
+        shadowRoot.value.adoptedStyleSheets = stylesheets;
+    }
+
+    function onClickEvent(e: Event): void {
+        e.preventDefault();
+
+        if(!(e.target instanceof Element)) {
+            return;
+        }
+
+        const link = e.target.closest('a');
+
+        if(!(link instanceof HTMLAnchorElement) || !link.href) {
+            return;
+        }
+
+        const url = new URL(link.href);
+
+        onNavigate(url.pathname);
+    }
 </script>
 
 <template>

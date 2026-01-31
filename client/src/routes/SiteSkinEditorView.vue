@@ -1,12 +1,13 @@
 <script setup lang="ts">
     import { computed, ref } from "vue";
-    import { StyleSheetBundle, ThemeInfo, StyleSheetAsset, Theme } from "shared/models";
+    import { Zap, RotateCcw, Flame } from "lucide-vue-next";
     import { createMediaQueryWrapped, createRule, createProperty, getHostUrl } from "shared/functions";
     import { useReactiveStorage } from "@/composables/UseReactiveStorage";
     import { fetchAssets, fetchTheme } from "@/functions/api";
+    import { StyleSheetBundle, ThemeInfo, StyleSheetAsset, Theme } from "shared/models";
     import Browser from "@/components/Browser.vue";
     import ThemeResult from "@/components/ThemeResult.vue";
-    import VariableSettings from "@/components/VariableSettings.vue";
+    import ThemeSettings from "@/components/ThemeSettings.vue";
 
     type StringMap = { [key: string]: string }
 
@@ -55,6 +56,10 @@
         });
 
         theme.radius.forEach(p => {
+            results[p.key] = String(p.value);
+        });
+
+        theme.fonts.forEach(p => {
             results[p.key] = String(p.value);
         });
 
@@ -143,22 +148,35 @@
     <div class="absolute inset-0 flex">
         <!-- left panel -->
         <div class="min-w-64 w-64 overflow-y-auto">
-            <div class="sidebar border-base-300 border-e p-3">
-                <div class="grid gap-2">
-                    <button class="btn btn-sm btn-success btn-outline" @click="generateTheme">Generate theme</button>
-                    <button class="btn btn-sm btn-error btn-outline" @click="clearGenerated">Clear generated theme</button>
-                    <button class="btn btn-sm btn-error btn-outline" @click="resetVariables">Reset variables</button>
+            <div class="grid gap-8 border-e border-base-300 p-3">
+                <div>
+                    <h3 class="flex items-center gap-2 mb-4">
+                        <zap :size="16"/>
+                        <span class="text-sm">Actions</span>
+                        <span class="border-b grow ms-2"/>
+                    </h3>
+                    <div class="grid gap-2">
+                        <button class="btn btn-sm btn-success justify-between" @click="generateTheme">
+                            <span>Create theme</span>
+                            <flame :size="16"/>
+                        </button>
+                        <button class="btn btn-sm btn-error btn-outline justify-between" @click="resetVariables">
+                            <span>Reset all variables</span>
+                            <rotate-ccw :size="16"/>
+                        </button>
+                    </div>
                 </div>
-
-                <variable-settings
-                    v-if="theme && variableValues"
-                    :theme="theme"
-                    v-model="variableValues"
-                />
 
                 <theme-result
                     v-if="generatedStyleSheets"
                     :stylesheets="generatedStyleSheets"
+                    @clear="clearGenerated"
+                />
+
+                <theme-settings
+                    v-if="theme && variableValues"
+                    :theme="theme"
+                    v-model="variableValues"
                 />
             </div>
         </div>
@@ -172,11 +190,3 @@
         </div>
     </div>
 </template>
-
-<style scoped>
-    .sidebar > *:not(:last-child) {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 3px double;
-    }
-</style>

@@ -216,22 +216,22 @@ const theme: Theme = {
         {
             key: '--ui-roundness',
             name: 'Roundness',
-            value: 0.125,
-            unit: 'rem',
+            value: 2,
+            unit: 'px',
             description: 'Border radius',
-            possibleValues: [0, 0.125, 0.25, 0.5, 999]
+            possibleValues: [0, 0.5, 1, 2, 3, 4]
         }
     ],
     sizes: [
         {
             key: '--ui-density',
             name: 'Density',
-            value: 0.125,
-            unit: 'rem',
+            value: 2,
+            unit: 'px',
             description: 'Spacing',
             min: 0,
-            max: 0.5,
-            step: 0.0625
+            max: 5,
+            step: 1
         },
         {
             key: '--ui-border',
