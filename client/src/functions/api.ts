@@ -5,11 +5,11 @@ async function fetchAPI(path: string, init?: RequestInit): Promise<Response> {
     return fetch(url, init);
 }
 
-export async function fetchPages(url: string, controller: AbortController): Promise<Response> {
+export async function fetchPages(url: string, signal?: AbortSignal): Promise<Response> {
     const params = new URLSearchParams({url});
 
     return fetchAPI(`/api/pages?${params}`, {
-        signal: controller.signal
+        signal: signal
     });
 }
 
@@ -17,12 +17,13 @@ export async function fetchAssets(): Promise<Response> {
     return fetchAPI('/api/assets');
 }
 
-export async function fetchTheme(values: [string, string][]): Promise<Response> {
+export async function fetchTheme(values: [string, string][], signal?: AbortSignal): Promise<Response> {
     const body = JSON.stringify(values);
 
     return fetchAPI('/api/generate', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: body
+        body: body,
+        signal: signal
     });
 }

@@ -1,14 +1,13 @@
 <script setup lang="ts">
-    import { House } from "lucide-vue-next";
     import { useReactiveStorage } from "@/composables/UseReactiveStorage";
+    import BrowserToolbar from "@/components/BrowserToolbar.vue";
     import BrowserBody from "@/components/BrowserBody.vue";
     import LoadingIndicator from "@/components/LoadingIndicator.vue";
-    import BrowserUrl from "@/components/BrowserUrl.vue";
     import ErrorBoundary from "@/components/ErrorBoundary.vue";
     import ErrorPanel from "@/components/ErrorPanel.vue";
 
     const {stylesheets, baseUrl} = defineProps<{
-        stylesheets: string[]
+        stylesheets: CSSStyleSheet[]
         baseUrl: string
     }>();
 
@@ -20,41 +19,34 @@
 </script>
 
 <template>
-    <div class="mockup-browser rounded-none relative">
-        <div class="mockup-browser-toolbar">
-            <div class="flex gap-2 mx-auto items-center">
-                <button class="btn btn-ghost p-0 h-auto" @click="onNavigate('/')">
-                    <house :size="18"/>
-                </button>
+    <div class="relative h-full flex flex-col">
+        <browser-toolbar
+            :base-url="baseUrl"
+            v-model="url"
+        />
 
-                <browser-url
-                    :origin="baseUrl"
-                    v-model="url"
-                    class="input outline-0 m-0 w-80"
-                />
-            </div>
-        </div>
-
-        <transition mode="out-in" name="fade">
-            <div :key="url">
-                <error-boundary>
-                    <suspense timeout="0">
-                        <browser-body
-                            :url="url"
-                            :stylesheets="stylesheets"
-                            :on-navigate="onNavigate"
-                        />
-                        <template #fallback>
-                            <div class="my-8">
-                                <loading-indicator/>
-                            </div>
+        <div class="grow overflow-auto rounded-xl border-2 m-2 shadow shadow-base-300">
+            <transition mode="out-in" name="fade">
+                <div :key="url">
+                    <error-boundary>
+                        <suspense timeout="0">
+                            <browser-body
+                                :url="url"
+                                :stylesheets="stylesheets"
+                                :on-navigate="onNavigate"
+                            />
+                            <template #fallback>
+                                <div class="my-8">
+                                    <loading-indicator/>
+                                </div>
+                            </template>
+                        </suspense>
+                        <template #error="{error, clearError}">
+                            <error-panel :error="error" :clear-error="clearError"/>
                         </template>
-                    </suspense>
-                    <template #error="{error, clearError}">
-                        <error-panel :error="error" :clear-error="clearError"/>
-                    </template>
-                </error-boundary>
-            </div>
-        </transition>
+                    </error-boundary>
+                </div>
+            </transition>
+        </div>
     </div>
 </template>

@@ -57,10 +57,6 @@
                 />
             </label>
         </div>
-        <span class="text-xs ms-0.5 text-neutral-content">{{ group.name }}</span>
+        <span class="text-xs ms-0.5 text-neutral-content/80">{{ group.name }}</span>
     </div>
 </template>
-
-<style scoped>
-
-</style>

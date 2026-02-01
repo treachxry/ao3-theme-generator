@@ -1,18 +1,19 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from "vue";
 
-    const {origin} = defineProps<{
+    const {origin, pathname} = defineProps<{
         origin: string
+        pathname: string
     }>();
 
-    const pathname = defineModel<string>({
-        required: true
-    });
+    const emits = defineEmits<{
+        (e: 'change', pathname: string): void
+    }>();
 
     const inputElement = useTemplateRef('url-input');
 
     const displayUrl = computed(() => {
-        return new URL(pathname.value, origin).href;
+        return new URL(pathname, origin).href;
     })
 
     function onKeyDown(e: KeyboardEvent): void {
@@ -30,7 +31,7 @@
 
         const newUrl = new URL(value);
 
-        if(newUrl.pathname === pathname.value) {
+        if(newUrl.pathname === pathname) {
             if (newUrl.origin !== origin && inputElement.value) {
                 inputElement.value.value = displayUrl.value;
             }
@@ -38,7 +39,7 @@
             return;
         }
 
-        pathname.value = newUrl.pathname;
+        emits('change', newUrl.pathname);
     }
 </script>
 

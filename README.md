@@ -2,21 +2,6 @@
 
 > This project is in the middle of restructuring. Existing functionality of building the site skin locally will be back.
 
-## TODO
-
-Styles
-- Download skin as one zip file
-- Link border width variable to styles
-
-UI/UX
-- Nicer color settings
-- Fix mobile layout
-- Loading screens and progress bars
-- Live install walkthrough on UI
-
-Reliability
-- Request validation
-
 ## Installation
 
 ### 1. Get skin files

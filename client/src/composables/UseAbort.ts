@@ -1,35 +1,26 @@
-import { readonly, ref } from "vue";
+export function useAbort(controller: AbortController = new AbortController()) {
+    async function runAbortable<T>(callback: (signal: AbortSignal) => Promise<T>): Promise<T | undefined> {
+        return new Promise(async (resolve, reject) => {
+            controller.signal.addEventListener('abort', _ => {
+                reject(controller.signal.reason);
+            });
 
-export function useAbort() {
-    const controller = new AbortController();
-    const running = ref(false);
-
-    async function runAbortable<T>(callback: (c: AbortController) => Promise<T>): Promise<T | undefined> {
-        if(running.value) {
-            controller.abort();
-        }
-
-        try {
-            running.value = true;
-            const result = await callback(controller);
-            running.value = false;
-
-            return result;
-        }
-        catch(e: any) {
-            if(e.name !== 'AbortError') {
-                running.value = false;
-                throw e;
+            try {
+                const result = await callback(controller.signal);
+                resolve(result);
             }
-            else {
-                running.value = false;
+            catch(e) {
+                reject(e);
             }
-        }
+        });
+    }
+
+    function abort() {
+        controller.abort();
     }
 
     return {
-        isRunning: readonly(running),
         runAbortable,
-        controller
+        abort
     };
 }

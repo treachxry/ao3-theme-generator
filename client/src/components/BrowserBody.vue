@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { onBeforeUnmount, ref, watch } from "vue";
+    import { computed, onBeforeUnmount, ref } from "vue";
     import { fetchPages } from "@/functions/api";
     import { useAbort } from "@/composables/UseAbort";
     import { HtmlAsset } from "shared/models";
@@ -10,25 +10,23 @@
 
     const {url, stylesheets, onNavigate} = defineProps<{
         url: string,
-        stylesheets: string[]
+        stylesheets: CSSStyleSheet[]
         onNavigate: (url: string) => void
     }>()
 
-    const {runAbortable, controller} = useAbort();
+    const {runAbortable, abort} = useAbort();
+    const shadowStyles: CSSStyleSheet = getDefaultShadowDomStyles();
+
     const documentRoot = ref<Node | undefined>(await fetchHtml());
-    const documentStyles = ref<CSSStyleSheet[]>(await getStyles());
+    const documentStyles = computed<CSSStyleSheet[]>(() => [shadowStyles, ...stylesheets]);
 
     onBeforeUnmount(() => {
-        controller.abort();
-    });
-
-    watch(() => stylesheets, async () => {
-        documentStyles.value = await getStyles();
+        abort();
     });
 
     async function fetchHtml(): Promise<Node | undefined> {
-        return await runAbortable(async () => {
-            const response = await fetchPages(url, controller);
+        return runAbortable(async signal => {
+            const response = await fetchPages(url, signal);
 
             if(!response.ok) {
                 throw new Error(`${response.status} ${response.statusText}`);
@@ -40,22 +38,10 @@
         });
     }
 
-    async function getStyles(): Promise<CSSStyleSheet[]> {
-        const stylesAsStrings: string[] = [
-            getDefaultShadowDomStyles(),
-            ...stylesheets
-        ];
-
-        return Promise.all(stylesAsStrings.map(styleSheetFromString));
-    }
-
-    async function styleSheetFromString(css: string): Promise<CSSStyleSheet> {
+    function getDefaultShadowDomStyles(): CSSStyleSheet {
         const sheet = new CSSStyleSheet();
-        return sheet.replace(css);
-    }
 
-    function getDefaultShadowDomStyles(): string {
-        return `
+        sheet.replaceSync(`
             :host {
                 all: initial;
                 display: block;
@@ -69,7 +55,9 @@
                 height: 100%;
                 overflow: auto;
             }
-        `;
+        `);
+
+        return sheet;
     }
 
     function processHtml(html: string): HTMLElement {

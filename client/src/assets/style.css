@@ -1,7 +1,5 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-    themes: all;
-}
+@import "./theme.css";
 
 html, body, #app {
     height: 100%;
@@ -14,4 +12,18 @@ html, body, #app {
 
 .fade-enter-from, .fade-leave-to {
     opacity: 0;
+}
+
+@layer components {
+    .lucide {
+        @apply size-4;
+    }
+
+    .sidebar-divider {
+        @apply flex items-center gap-2 mb-6 text-sm;
+
+        &::after {
+            @apply content-[""] border-b grow;
+        }
+    }
 }

@@ -38,11 +38,11 @@
             <div class="text-[10px] opacity-80">@media {{ stylesheet.media }}</div>
         </div>
         <div class="grid grid-cols-2 gap-1">
-            <button class="btn btn-xs btn-primary rounded h-5" @click="downloadContents">
-                <download :size="14"/>
+            <button class="btn btn-xs btn-primary rounded" @click="downloadContents">
+                <download class="size-3.5"/>
             </button>
-            <button class="btn btn-xs btn-primary btn-outline rounded h-5" @click="copyContents">
-                <copy :size="14"/>
+            <button class="btn btn-xs btn-primary btn-outline rounded" @click="copyContents">
+                <copy class="size-3.5"/>
             </button>
         </div>
     </div>

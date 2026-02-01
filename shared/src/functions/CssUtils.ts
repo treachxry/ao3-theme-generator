@@ -1,7 +1,3 @@
-export function createMediaQueryWrapped(media: string, rules: string): string {
-    return `@media ${media}{${rules}}`;
-}
-
 export function createProperty(key: string, value: string): string {
     return `${key}:${value}`;
 }

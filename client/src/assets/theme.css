@@ -1,0 +1,9 @@
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+    name: "coffee";
+
+    --color-error: oklch(70% 0.18 22);
+    --size-selector: 0.1875rem;
+    --size-field: 0.1875rem;
+}
