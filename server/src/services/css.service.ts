@@ -1,9 +1,10 @@
-import { StyleSheetAssetInfo, StyleSheetAsset, StyleSheetImportance, Theme } from "shared/models";
-import { createProperty, createRule, mergeRules } from "shared/functions";
-import { join } from "node:path";
 import postcss from "postcss";
+import { CssAsset, CssAssetImportance, Theme } from "shared/models";
+import { join } from "node:path";
+import { createProperty, createRule, mergeRules } from "shared/functions";
 import { AppContext } from "@/models/AppContext";
 import { CssAssetType } from "@/models/CssAssetType";
+import { CssAssetInfo } from "@/models/CssAssetInfo";
 import { readServerAsset } from "@/services/assets.service";
 import { getPlugins } from "@/functions/css-plugins";
 
@@ -11,7 +12,7 @@ export function getTheme(): Theme {
     return theme;
 }
 
-export async function generateCss(c: AppContext, variables: string[][]): Promise<StyleSheetAsset[]> {
+export async function generateCss(c: AppContext, variables: string[][], options: {} = {}): Promise<CssAsset[]> {
     const assetType = CssAssetType.RAW;
     const properties = variables.map(v => createProperty(v[0], v[1]));
     const plugins = getPlugins({type: assetType})
@@ -27,11 +28,11 @@ export async function generateCss(c: AppContext, variables: string[][]): Promise
         return {
             ...file,
             content: processedCss.css
-        } satisfies StyleSheetAsset;
+        } satisfies CssAsset;
     }));
 }
 
-export async function readStyleAssets(context: AppContext, type: CssAssetType): Promise<StyleSheetAsset[]> {
+export async function readStyleAssets(context: AppContext, type: CssAssetType): Promise<CssAsset[]> {
     const directory = `/${type}`;
 
     const stylesheets = await Promise.all(sheets.map(s => {
@@ -41,7 +42,7 @@ export async function readStyleAssets(context: AppContext, type: CssAssetType): 
     return stylesheets.filter(s => s !== undefined);
 }
 
-async function readStyleAsset(context: AppContext, directory: string, file: StyleSheetAssetInfo): Promise<StyleSheetAsset | undefined> {
+async function readStyleAsset(context: AppContext, directory: string, file: CssAssetInfo): Promise<CssAsset | undefined> {
     const path = join(directory, file.filename);
     const response = await readServerAsset(context, path);
 
@@ -219,7 +220,9 @@ const theme: Theme = {
             value: 2,
             unit: 'px',
             description: 'Border radius',
-            possibleValues: [0, 0.5, 1, 2, 3, 4]
+            min: 0,
+            max: 4,
+            step: 0.5,
         }
     ],
     sizes: [
@@ -246,35 +249,35 @@ const theme: Theme = {
     ]
 }
 
-const sheets: StyleSheetAssetInfo[] = [
+const sheets: CssAssetInfo[] = [
     {
         description: 'General',
         media: 'all',
         filename: 'media-all.css',
-        importance: StyleSheetImportance.Required,
+        importance: CssAssetImportance.Required,
     },
     {
         description: 'Midsize',
         media: 'only screen and (max-width: 62em)',
         filename: 'media-midsize.css',
-        importance: StyleSheetImportance.Recommended,
+        importance: CssAssetImportance.Recommended,
     },
     {
         description: 'Narrow',
         media: 'only screen and (max-width: 42em)',
         filename: 'media-narrow.css',
-        importance: StyleSheetImportance.Required,
+        importance: CssAssetImportance.Required,
     },
     {
         description: 'Speech',
         media: 'speech',
         filename: 'media-aural.css',
-        importance: StyleSheetImportance.Optional,
+        importance: CssAssetImportance.Optional,
     },
     {
         description: 'Print',
         media: 'print',
         filename: 'media-print.css',
-        importance: StyleSheetImportance.Optional
+        importance: CssAssetImportance.Optional
     }
 ];

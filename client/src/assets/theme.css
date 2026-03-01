@@ -2,8 +2,32 @@
 
 @plugin "daisyui/theme" {
     name: "coffee";
-
+    --color-base-100: oklch(24% 0.019 330);
+    --color-base-200: oklch(21% 0.017 330);
+    --color-base-300: oklch(16% 0.015 330);
+    --color-base-content: oklch(85% 0.080 79);
+    --color-primary: oklch(72% 0.123 63);
+    --color-primary-content: oklch(15% 0.025 63);
+    --color-secondary: oklch(34% 0.029 200);
+    --color-secondary-content: oklch(86% 0.005 200);
+    --color-accent: oklch(43% 0.074 225);
+    --color-accent-content: oklch(88% 0.014 225);
+    --color-neutral: oklch(16% 0.015 330);
+    --color-neutral-content: oklch(88% 0.003 330);
+    --color-info: oklch(80% 0.09 185);
+    --color-info-content: oklch(15% 0.025 185);
+    --color-success: oklch(75% 0.09 131);
+    --color-success-content: oklch(15% 0.025 131);
+    --color-warning: oklch(88% 0.14 88);
+    --color-warning-content: oklch(15% 0.025 88);
     --color-error: oklch(70% 0.18 22);
+    --color-error-content: oklch(15% 0.025 22);
+    --radius-selector: 1rem;
+    --radius-field: 0.5rem;
+    --radius-box: 1rem;
     --size-selector: 0.1875rem;
     --size-field: 0.1875rem;
+    --border: 1px;
+    --depth: 0;
+    --noise: 0;
 }

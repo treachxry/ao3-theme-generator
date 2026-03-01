@@ -1,22 +1,4 @@
-import { ref, Ref, watch } from "vue";
-
-export function useReactiveStorage<T>(key: string): Ref<T | null>;
-export function useReactiveStorage<T>(key: string, getDefault: () => T): Ref<T>;
-
-export function useReactiveStorage<T>(key: string, getDefault?: () => T): Ref<T | null> {
-    const handler = useStorage<T>(localStorage, key);
-    const result = ref<T | null>(handler.load() ?? (getDefault ? getDefault() : null)) as Ref<T | null>;
-
-    watch(result, (value) => {
-        if(value !== null) {
-            handler.save(value);
-        }
-    }, {deep: true});
-
-    return result;
-}
-
-function useStorage<T>(storage: Storage, key: string): StorageHandler<T> {
+export function useStorage<T>(storage: Storage, key: string) {
     function load(): T | null {
         try {
             const serializedValue: string | null = storage.getItem(key);
@@ -60,9 +42,3 @@ function useStorage<T>(storage: Storage, key: string): StorageHandler<T> {
         discard
     };
 }
-
-type StorageHandler<T> = {
-    load: () => T | null
-    save: (value: T) => void
-    discard: () => void
-};

@@ -1,19 +1,30 @@
 <script setup lang="ts">
-    import { Theme } from "shared/models";
-    import { PaintBucket, SquareRoundCorner, Ruler } from "lucide-vue-next";
+    import { PaintBucket, SquareRoundCorner, Ruler, RotateCcw, Zap, Flame } from "lucide-vue-next";
+    import { useSiteSkinEditor } from "@/composables/useSiteSkinEditor";
     import ThemeColorGroup from "@/components/ThemeColorGroup.vue";
 
-    const {theme} = defineProps<{
-        theme: Theme
-    }>();
-
-    const variableValues = defineModel<{ [key: string]: string }>({
-        required: true
-    });
+    const {activeVariables, theme, resetActiveVariables, createTheme} = useSiteSkinEditor();
 </script>
 
 <template>
     <div class="grid gap-8">
+        <div>
+            <h3 class="sidebar-divider">
+                <zap/>
+                <span>Actions</span>
+            </h3>
+            <div class="grid gap-2">
+                <button class="btn btn-sm btn-success justify-between" @click="createTheme">
+                    <span>Create theme</span>
+                    <flame/>
+                </button>
+                <button class="btn btn-sm btn-error btn-outline justify-between" @click="resetActiveVariables">
+                    <span>Reset all variables</span>
+                    <rotate-ccw/>
+                </button>
+            </div>
+        </div>
+
         <div>
             <h3 class="sidebar-divider">
                 <paint-bucket/>
@@ -22,7 +33,7 @@
             <div class="grid grid-cols-4 gap-4 text-neutral-content/80">
                 <theme-color-group
                     v-for="group in theme.colors"
-                    v-model="variableValues"
+                    v-model="activeVariables"
                     :group="group"
                 />
             </div>
@@ -35,14 +46,18 @@
             </h3>
             <div class="grid gap-4 text-neutral-content/80">
                 <div v-for="radius in theme.radius" class="text-xs">
-                    <div class="mb-1 px-0.5">
-                        {{ radius.description }}
+                    <div class="flex justify-between mb-1 px-0.5">
+                        <span>{{ radius.description }}</span>
+                        <span>{{ activeVariables[radius.key] }}{{ radius.unit }}</span>
                     </div>
-                    <select v-model="variableValues[radius.key]" class="select select-sm">
-                        <option v-for="v in radius.possibleValues" :value="String(v)">
-                            {{ v }}{{ radius.unit }}
-                        </option>
-                    </select>
+                    <input
+                        type="range"
+                        class="range range-xs"
+                        :min="radius.min"
+                        :max="radius.max"
+                        :step="radius.step"
+                        v-model="activeVariables[radius.key]"
+                    />
                 </div>
             </div>
         </div>
@@ -56,7 +71,7 @@
                 <div v-for="size in theme.sizes" class="text-xs">
                     <div class="flex justify-between mb-1 px-0.5">
                         <span>{{ size.description }}</span>
-                        <span>{{ variableValues[size.key] }}{{size.unit }}</span>
+                        <span>{{ activeVariables[size.key] }}{{ size.unit }}</span>
                     </div>
                     <input
                         type="range"
@@ -64,7 +79,7 @@
                         :min="size.min"
                         :max="size.max"
                         :step="size.step"
-                        v-model="variableValues[size.key]"
+                        v-model="activeVariables[size.key]"
                     />
                 </div>
             </div>

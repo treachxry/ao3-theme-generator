@@ -39,7 +39,7 @@
             return;
         }
 
-        emits('change', newUrl.pathname);
+        emits('change', newUrl.pathname + newUrl.search);
     }
 </script>
 

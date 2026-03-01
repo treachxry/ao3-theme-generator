@@ -1,5 +1,5 @@
 import { OpenAPIRoute } from "chanfana";
-import { StyleSheetBundle } from "shared/models";
+import { CssAssetBundle } from "shared/models";
 import { AppContext } from "@/models/AppContext";
 import { CssAssetType } from "@/models/CssAssetType";
 import { getTheme, readStyleAssets } from "@/services/css.service";
@@ -9,7 +9,7 @@ export class Assets extends OpenAPIRoute {
         const theme = getTheme();
         const stylesheets = await readStyleAssets(c, CssAssetType.PREPARED);
 
-        const data: StyleSheetBundle = {
+        const data: CssAssetBundle = {
             theme: theme,
             stylesheets: stylesheets
         };

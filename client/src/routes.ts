@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/routes/HomeView.vue";
-import SiteSkinEditorView from "@/routes/SiteSkinEditorView.vue";
-import WorkSkinEditorView from "@/routes/WorkSkinEditorView.vue";
+import SiteSkinView from "@/routes/SiteSkinView.vue";
+import WorkSkinView from "@/routes/WorkSkinView.vue";
 import NotFoundView from "@/routes/NotFoundView.vue";
 
 const routes = [
     {path: '/', component: HomeView},
-    {path: '/site-skin', component: SiteSkinEditorView},
-    {path: '/work-skin', component: WorkSkinEditorView},
+    {path: '/site-skin', component: SiteSkinView},
+    {path: '/work-skin', component: WorkSkinView},
     {path: '/:pathName(.*)', component: NotFoundView}
 ];
 

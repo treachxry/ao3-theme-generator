@@ -1,95 +1,80 @@
 <script setup lang="ts">
-    import { onBeforeUnmount, ref } from "vue";
+    import { computed, ref } from "vue";
     import JSZip from "jszip";
-    import { FolderArchive, ChevronRight, ChevronDown, SquareCode, Trash2 } from "lucide-vue-next";
-    import { useAbort } from "@/composables/UseAbort";
-    import { downloadFile } from "@/functions/downloads";
-    import { fetchTheme } from "@/functions/api";
-    import { StyleSheetAsset, ThemeInfo } from "shared/models";
-    import ThemePart from "@/components/ThemePart.vue";
+    import { FolderDown, Check, Trash2, FileText } from "lucide-vue-next";
+    import { downloadFile, getFileSizeWithUnit } from "@/functions/file-utils";
+    import { GeneratedTheme } from "@/models/GeneratedTheme";
+    import ThemeResultDetails from "@/components/ThemeResultDetails.vue";
 
-    const {variables} = defineProps<{
-        variables: Record<string, string>
+    const {theme} = defineProps<{
+        theme: GeneratedTheme
     }>();
 
     const emits = defineEmits<{
         (e: 'clear'): void
     }>();
 
-    onBeforeUnmount(() => {
-        abort();
-    });
-
-    const {runAbortable, abort} = useAbort();
-    const stylesheets = ref<StyleSheetAsset[] | undefined>(await onThemeCreate());
     const detailsOpen = ref<boolean>(false);
 
-    async function onThemeCreate(): Promise<StyleSheetAsset[] | undefined> {
-        return runAbortable(async signal => {
-            const values = Object.entries(variables).map(v => v);
+    const totalSize = computed<string>(() => {
+        const totalBytes = theme.stylesheets.reduce((sum, sheet) => sum + sheet.content.length, 0);
+        const {size, unit} = getFileSizeWithUnit(totalBytes);
 
-            const response = await fetchTheme(values, signal);
-
-            if(!response.ok) {
-                throw new Error(`Request failed: ${response.statusText}`);
-            }
-
-            const data: ThemeInfo = await response.json();
-
-            return data.stylesheets;
-        });
-    }
+        return `${size.toPrecision(4)} ${unit}`;
+    })
 
     async function downloadTheme(): Promise<void> {
-        if(!stylesheets.value) {
-            return;
-        }
-
         const zip = new JSZip();
 
-        for(const stylesheet of stylesheets.value) {
+        for(const stylesheet of theme.stylesheets) {
             zip.file(stylesheet.filename, stylesheet.content);
         }
 
         const blob = await zip.generateAsync({type: 'blob'});
 
-        downloadFile(blob, 'site-skin.zip');
+        downloadFile(blob, `${theme.name}.zip`);
     }
 
-    function onClear(): void {
+    function deleteTheme(): void {
         emits('clear');
+    }
+
+    function openDetails(): void {
+        detailsOpen.value = true;
+    }
+
+    function closeDetails(): void {
+        detailsOpen.value = false;
     }
 </script>
 
 <template>
-    <div>
-        <h3 class="sidebar-divider">
-            <square-code/>
-            <span>Results</span>
-        </h3>
-        <div class="grid gap-2">
-            <button class="btn btn-sm btn-primary justify-between" @click="downloadTheme">
-                <span>Download as archive</span>
-                <folder-archive/>
+    <div class="min-w-0 flex cursor-pointer items-center gap-2 p-1 hover:bg-base-200 rounded-lg transition-colors" @click="openDetails">
+        <file-text class="text-base-content/60 shrink-0"/>
+
+        <div class="shrink min-w-0 truncate font-medium text-xs" :title="theme.name">
+            {{ theme.name }}
+        </div>
+
+        <div class="ms-auto badge badge-xs badge-success gap-0 shrink-0">
+            <check class="size-3.5"/>
+            <span class="text-nowrap">{{ totalSize }}</span>
+        </div>
+
+        <div class="flex items-center shrink-0">
+            <button class="btn btn-ghost btn-primary px-1 py-0.5 h-auto rounded-sm" @click.stop="downloadTheme">
+                <folder-down/>
             </button>
-            <div class="grid bg-base-200 rounded-lg shadow shadow-base-300">
-                <button @click="detailsOpen= !detailsOpen" class="btn btn-sm btn-primary btn-outline justify-between">
-                    <span>Individual parts</span>
-                    <chevron-down v-if="detailsOpen"/>
-                    <chevron-right v-else/>
-                </button>
-                <div v-if="detailsOpen" class="grid px-1.5 py-3">
-                    <theme-part
-                        v-for="(stylesheet, i) in stylesheets"
-                        :stylesheet="stylesheet"
-                        :class="{'mt-2.5 pt-1.5 border-t border-base-content/50': i !== 0}"
-                    />
-                </div>
-            </div>
-            <button class="btn btn-sm btn-error btn-outline justify-between" @click="onClear">
-                <span>Discard theme</span>
+            <button class="btn btn-ghost btn-error px-1 py-0.5 h-auto rounded-sm" @click.stop="deleteTheme">
                 <trash2/>
             </button>
         </div>
     </div>
+
+    <teleport v-if="detailsOpen" to="body">
+        <theme-result-details
+            :theme="theme"
+            :close="closeDetails"
+        />
+    </teleport>
 </template>

@@ -1,4 +1,4 @@
-import { StyleSheetAsset, Theme } from "shared/models";
+import { CssAsset, Theme } from "shared/models";
 import { createProperty, createRule } from "shared/functions";
 
 export function themeToVariableMap(theme: Theme): Record<string, string> {
@@ -25,7 +25,7 @@ export function themeToVariableMap(theme: Theme): Record<string, string> {
     return results;
 }
 
-export function getPreviewStyleSheets(stylesheets: StyleSheetAsset[], theme: Theme, variableValues: Record<string, string>): CSSStyleSheet[] {
+export function getPreviewStyleSheets(stylesheets: CssAsset[], theme: Theme, variableValues: Record<string, string>): CSSStyleSheet[] {
     const properties = Object.entries(variableValues).map(v => {
         const key = v[0];
         const value = `${v[1]}${getUnit(theme, key)}`

@@ -2,16 +2,15 @@
 @import "./theme.css";
 
 html, body, #app {
-    height: 100%;
-    position: relative;
+    @apply h-full relative;
 }
 
 .fade-enter-active, .fade-leave-active {
-    transition: opacity 250ms ease;
+    @apply transition-opacity duration-250;
 }
 
 .fade-enter-from, .fade-leave-to {
-    opacity: 0;
+    @apply opacity-0;
 }
 
 @layer components {

@@ -1,7 +1,6 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { getHostUrl } from "shared/functions";
-import { HtmlAsset } from "shared/models";
 import { AppContext } from "@/models/AppContext";
 import { fetchPage } from "@/services/pages.service";
 
@@ -22,18 +21,13 @@ export class Pages extends OpenAPIRoute {
         const response = await fetchPage(url);
 
         if(!response.ok) {
-            c.status(400);
+            c.status(response.status as any);
 
             return c.text(response.statusText);
         }
 
         const html = await response.text();
 
-        const data: HtmlAsset = {
-            content: html,
-            url: url.href,
-        };
-
-        return c.json(data);
+        return c.text(html);
     }
 }

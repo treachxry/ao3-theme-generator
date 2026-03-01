@@ -1,19 +1,19 @@
 <script setup lang="ts">
-    import { StyleSheetAsset, StyleSheetImportance } from "shared/models";
-    import { downloadFile } from "@/functions/downloads";
+    import { CssAsset, CssAssetImportance } from "shared/models";
+    import { downloadFile } from "@/functions/file-utils";
     import { Download, Copy } from "lucide-vue-next";
 
     const {stylesheet} = defineProps<{
-        stylesheet: StyleSheetAsset
+        stylesheet: CssAsset
     }>();
 
-    function getImportanceClass(importance: StyleSheetImportance) {
+    function getImportanceClass(importance: CssAssetImportance) {
         switch(importance) {
-            case StyleSheetImportance.Required:
+            case CssAssetImportance.Required:
                 return 'badge-error';
-            case StyleSheetImportance.Recommended:
+            case CssAssetImportance.Recommended:
                 return 'badge-warning';
-            case StyleSheetImportance.Optional:
+            case CssAssetImportance.Optional:
                 return 'opacity-60';
         }
     }

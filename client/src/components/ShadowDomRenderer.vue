@@ -53,9 +53,7 @@
             return;
         }
 
-        const url = new URL(link.href);
-
-        onNavigate(url.pathname);
+        onNavigate(link.href);
     }
 </script>
 

@@ -1,39 +1,34 @@
 <script setup lang="ts">
-    import { useReactiveStorage } from "@/composables/UseReactiveStorage";
+    import { useStorageRef } from "@/composables/useStorageRef";
+    import { getHostUrl } from "shared/functions";
     import BrowserToolbar from "@/components/BrowserToolbar.vue";
     import BrowserBody from "@/components/BrowserBody.vue";
     import LoadingIndicator from "@/components/LoadingIndicator.vue";
     import ErrorBoundary from "@/components/ErrorBoundary.vue";
     import ErrorPanel from "@/components/ErrorPanel.vue";
 
-    const {stylesheets, baseUrl} = defineProps<{
+    const {stylesheets} = defineProps<{
         stylesheets: CSSStyleSheet[]
-        baseUrl: string
     }>();
 
-    const url = useReactiveStorage<string>('tg-page-url', () => '/');
-
-    function onNavigate(value: string) {
-        url.value = value;
-    }
+    const url = useStorageRef<string>('tg-page-url', () => '/');
 </script>
 
 <template>
-    <div class="relative h-full flex flex-col">
+    <div class="relative h-full flex flex-col p-2 gap-2">
         <browser-toolbar
-            :base-url="baseUrl"
             v-model="url"
+            :base-url="getHostUrl()"
         />
 
-        <div class="grow overflow-auto rounded-xl border-2 m-2 shadow shadow-base-300">
+        <div class="grow overflow-auto rounded-xl border-2 shadow shadow-base-300">
             <transition mode="out-in" name="fade">
                 <div :key="url">
                     <error-boundary>
                         <suspense timeout="0">
                             <browser-body
-                                :url="url"
+                                v-model="url"
                                 :stylesheets="stylesheets"
-                                :on-navigate="onNavigate"
                             />
                             <template #fallback>
                                 <div class="my-8">

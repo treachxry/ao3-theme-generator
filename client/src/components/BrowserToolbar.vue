@@ -1,23 +1,26 @@
 <script setup lang="ts">
-    import { nextTick, ref } from "vue";
-    import { House, ArrowLeft, ArrowRight, RotateCw, MenuIcon } from "lucide-vue-next";
+    import { nextTick } from "vue";
+    import { House, ArrowLeft, ArrowRight, RotateCw, Menu, FileCode } from "lucide-vue-next";
     import BrowserUrl from "@/components/BrowserUrl.vue";
+    import ToolbarMenu from "@/components/ToolbarMenu.vue";
+    import ThemeResult from "@/components/ThemeResult.vue";
+    import { useSiteSkinEditor } from "@/composables/useSiteSkinEditor";
 
     const {baseUrl} = defineProps<{
         baseUrl: string
     }>();
 
+    const {generatedThemes} = useSiteSkinEditor();
+
     const url = defineModel<string>({
         required: true
     });
 
-    const isMenuOpen = ref<boolean>(false);
-
-    function onNavigate(pathname: string) {
-        url.value = pathname;
+    function onNavigate(value: string) {
+        url.value = value;
     }
 
-    async function reloadPage() {
+    async function onReload() {
         const value = url.value;
 
         url.value = '';
@@ -25,54 +28,58 @@
         url.value = value;
     }
 
-    function toggleMenu() {
-        isMenuOpen.value = !isMenuOpen.value;
-    }
-
-    function closeMenu() {
-        isMenuOpen.value = false;
+    function removeTheme(index: number) {
+        generatedThemes.value.splice(index, 1);
     }
 </script>
 
 <template>
-    <div class="flex gap-4 items-center justify-between mx-4 mt-2 relative">
-        <div class="flex items-center gap-1">
+    <div class="flex gap-4 items-center justify-between px-2 relative">
+        <div class="flex items-center gap-2">
             <button class="btn btn-ghost p-1" :class="{'btn-disabled': true}" title="Go back one page">
-                <arrow-left class="size-4.5"/>
+                <arrow-left class="size-5"/>
             </button>
             <button class="btn btn-ghost p-1" :class="{'btn-disabled': true}" title="Go forward one page">
-                <arrow-right class="size-4.5"/>
+                <arrow-right class="size-5"/>
             </button>
-            <button class="btn btn-ghost p-1" @click="reloadPage" title="Reload current page">
-                <rotate-cw class="size-4.5"/>
+            <button class="btn btn-ghost p-1" @click="onReload" title="Reload current page">
+                <rotate-cw class="size-5"/>
             </button>
         </div>
 
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-2">
             <button class="btn btn-ghost p-1" @click="onNavigate('/')" title="Go to home page">
-                <house class="size-4.5"/>
+                <house class="size-5"/>
             </button>
 
             <browser-url
                 :origin="baseUrl"
                 :pathname="url"
                 @change="onNavigate"
-                class="input h-5 text-xs bg-base-200 outline-0 w-80"
+                class="input input-sm bg-base-200 outline-0 w-80"
             />
         </div>
 
-        <div class="flex items-center gap-1">
-            <div tabindex="0" class="relative z-100" @blur="closeMenu" title="Open settings menu">
-                <div class="btn btn-ghost p-1" @click="toggleMenu">
-                    <menu-icon class="size-4.5"/>
-                </div>
-
-                <div v-if="isMenuOpen" class="absolute top-full mt-0.5 right-0 border border-base-content/30 rounded w-80 bg-base-100">
-                    <div class="grid text-sm">
-                        <div class="px-3 py-1.5">To be implemented</div>
+        <div class="flex items-center gap-2">
+            <toolbar-menu :icon="FileCode">
+                <div class="grid text-sm overflow-y-auto w-80 max-h-120 p-1">
+                    <template v-if="generatedThemes.length">
+                        <theme-result
+                            v-for="(theme, i) in generatedThemes"
+                            :theme="theme"
+                            @clear="removeTheme(i)"
+                        />
+                    </template>
+                    <div v-else class="text-nowrap px-2 py-1">
+                        Generated themes will show up here.
                     </div>
                 </div>
-            </div>
+            </toolbar-menu>
+            <toolbar-menu :icon="Menu">
+                <div class="grid text-sm w-80">
+                    <div class="px-3 py-1.5">To be implemented</div>
+                </div>
+            </toolbar-menu>
         </div>
     </div>
 </template>

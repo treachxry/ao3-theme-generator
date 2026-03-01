@@ -1,16 +1,15 @@
-export * from "./models/StyleSheetBundle";
-export * from "./models/StyleSheetAssetInfo";
+export * from "./models/CssAssetBundle";
 export * from "./models/HtmlAsset";
-export * from "./models/StyleSheetAsset";
-export * from "./models/StyleSheetImportance";
+export * from "./models/CssAsset";
+export * from "./models/CssAssetImportance";
 export * from "./models/ThemeInfo";
 
 export type Theme = {
     name?: string
     colors: ColorGroup[]
-    radius: RadiusVar[]
+    radius: NumberVar[]
+    sizes: NumberVar[]
     fonts: FontVar[]
-    sizes: SizesVar[]
     options?: ThemeOptions
 }
 
@@ -36,19 +35,12 @@ export type ColorVar = {
     label?: string
 }
 
-export type RadiusVar = NumberVar & {
-    possibleValues: number[]
-}
-
 export type NumberVar = {
     key: string
     value: number
     name: string
     description: string
     unit: string
-}
-
-export type SizesVar = NumberVar & {
     min: number
     max: number
     step: number

@@ -1,113 +1,59 @@
 <script setup lang="ts">
-    import { computed, onBeforeUnmount, ref } from "vue";
+    import { computed, onBeforeUnmount } from "vue";
     import { fetchPages } from "@/functions/api";
-    import { useAbort } from "@/composables/UseAbort";
-    import { HtmlAsset } from "shared/models";
+    import { useAbort } from "@/composables/useAbort";
+    import { useSimulatedDocument } from "@/composables/useSimulatedDocument";
     import ShadowDomRenderer from "@/components/ShadowDomRenderer.vue";
 
-    const HTML_CLASS = 'shadow-html';
-    const BODY_CLASS = 'shadow-body';
-
-    const {url, stylesheets, onNavigate} = defineProps<{
-        url: string,
+    const {stylesheets} = defineProps<{
         stylesheets: CSSStyleSheet[]
-        onNavigate: (url: string) => void
     }>()
 
-    const {runAbortable, abort} = useAbort();
-    const shadowStyles: CSSStyleSheet = getDefaultShadowDomStyles();
+    const url = defineModel<string>({
+        required: true
+    });
 
-    const documentRoot = ref<Node | undefined>(await fetchHtml());
-    const documentStyles = computed<CSSStyleSheet[]>(() => [shadowStyles, ...stylesheets]);
+    const {runAbortable, abort} = useAbort();
+    const {getDocumentRoot, getDocumentStyles} = useSimulatedDocument();
+
+    const html: string = await fetchHtml();
+    const documentRoot: Node = getDocumentRoot(html);
+    const documentStyles = computed<CSSStyleSheet[]>(() => [getDocumentStyles(), ...stylesheets]);
 
     onBeforeUnmount(() => {
         abort();
     });
 
-    async function fetchHtml(): Promise<Node | undefined> {
-        return runAbortable(async signal => {
-            const response = await fetchPages(url, signal);
+    function onNavigate(value: string) {
+        const u = new URL(value);
+
+        url.value = u.pathname + u.search;
+    }
+
+    async function fetchHtml(): Promise<string> {
+        const result = await runAbortable(async signal => {
+            const response = await fetchPages(url.value, signal);
 
             if(!response.ok) {
-                throw new Error(`${response.status} ${response.statusText}`);
+                throw new Error(`Failed to fetch page (${response.status} ${response.statusText})`);
             }
 
-            const data: HtmlAsset = await response.json();
-
-            return processHtml(data.content);
-        });
-    }
-
-    function getDefaultShadowDomStyles(): CSSStyleSheet {
-        const sheet = new CSSStyleSheet();
-
-        sheet.replaceSync(`
-            :host {
-                all: initial;
-                display: block;
-            }
-
-            .${HTML_CLASS} {
-                height: 100%;
-            }
-
-            .${BODY_CLASS} {
-                height: 100%;
-                overflow: auto;
-            }
-        `);
-
-        return sheet;
-    }
-
-    function processHtml(html: string): HTMLElement {
-        const document = parseDocument(html);
-
-        cleanDocument(document);
-
-        return wrapDocument(document);
-    }
-
-    function parseDocument(html: string): Document {
-        const parser = new DOMParser();
-        return parser.parseFromString(html, 'text/html');
-    }
-
-    function cleanDocument(document: Document): void {
-        document.querySelectorAll('meta, title, script, style, link').forEach(el => {
-            el.remove();
+            return response.text();
         });
 
-        document.querySelectorAll('img[src^="/images"]').forEach(el => {
-            const element = el as HTMLImageElement;
-            const url = new URL(element.src);
-
-            element.src = `${__URL_BASE__}${url.pathname}`;
-        });
-    }
-
-    function wrapDocument(document: Document): HTMLElement {
-        const htmlWrapper = document.createElement('div');
-        htmlWrapper.className = HTML_CLASS;
-
-        const bodyWrapper = document.createElement('div');
-        bodyWrapper.className = BODY_CLASS;
-
-        htmlWrapper.appendChild(bodyWrapper);
-
-        while(document.body.firstChild) {
-            bodyWrapper.appendChild(document.body.firstChild);
+        if(!result) {
+            throw new Error('Failed to fetch page (operation aborted)');
         }
 
-        return htmlWrapper;
+        return result;
     }
 </script>
 
 <template>
     <shadow-dom-renderer
-        v-if="documentRoot"
         :root-node="documentRoot"
         :style-sheets="documentStyles"
         @navigate="onNavigate"
+        class="z-0 relative"
     />
 </template>

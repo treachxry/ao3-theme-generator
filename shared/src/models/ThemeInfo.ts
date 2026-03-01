@@ -1,5 +1,5 @@
-import { StyleSheetAsset } from "./StyleSheetAsset";
+import { CssAsset } from "./CssAsset";
 
 export interface ThemeInfo {
-    stylesheets: StyleSheetAsset[]
+    stylesheets: CssAsset[]
 }

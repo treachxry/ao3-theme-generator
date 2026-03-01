@@ -1,4 +1,4 @@
-export enum StyleSheetImportance {
+export enum CssAssetImportance {
     Optional = 'optional',
     Recommended = 'recommended',
     Required = 'required'
