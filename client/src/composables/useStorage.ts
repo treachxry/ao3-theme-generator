@@ -1,5 +1,11 @@
-export function useStorage<T>(storage: Storage, key: string) {
-    function load(): T | null {
+export interface IStorage<T> {
+    getItem: () => T | null
+    setItem: (value: T) => void
+    removeItem: () => void
+}
+
+export function useStorage<T>(storage: Storage, key: string): IStorage<T> {
+    function getItem(): T | null {
         try {
             const serializedValue: string | null = storage.getItem(key);
 
@@ -9,22 +15,20 @@ export function useStorage<T>(storage: Storage, key: string) {
         }
         catch(error) {
             console.warn(`Failed to parse "${key}" from storage.`, error);
-
-            discard();
+            removeItem();
         }
 
         return null;
     }
 
-    function save(value: T): void {
+    function setItem(value: T): void {
         if(value === undefined) {
-            discard();
+            removeItem();
             return;
         }
 
         try {
             const serializedValue: string = JSON.stringify(value);
-
             storage.setItem(key, serializedValue);
         }
         catch(error) {
@@ -32,13 +36,13 @@ export function useStorage<T>(storage: Storage, key: string) {
         }
     }
 
-    function discard(): void {
+    function removeItem(): void {
         storage.removeItem(key);
     }
 
     return {
-        load,
-        save,
-        discard
+        getItem,
+        setItem,
+        removeItem
     };
 }

@@ -1,0 +1,49 @@
+<script setup lang="ts">
+    import { CssAsset, AssetImportance } from "common/models";
+    import { downloadFile } from "@/functions/file-utils";
+    import { Download, Copy } from "lucide-vue-next";
+
+    const {stylesheet} = defineProps<{
+        stylesheet: CssAsset
+    }>();
+
+    function getImportanceClass(importance: AssetImportance) {
+        switch(importance) {
+            case AssetImportance.Required:
+                return 'badge-error';
+            case AssetImportance.Recommended:
+                return 'badge-warning';
+            case AssetImportance.Optional:
+                return 'opacity-60';
+        }
+    }
+
+    async function copyContents() {
+        await navigator.clipboard.writeText(stylesheet.content);
+    }
+
+    function downloadContents() {
+        downloadFile(stylesheet.content, stylesheet.filename);
+    }
+</script>
+
+<template>
+    <div class="grid gap-1">
+        <div class="font-semibold">
+            <div class="flex items-center gap-1">
+                <div class="text-sm me-auto">{{ stylesheet.description }}</div>
+                <div class="badge badge-xs badge-outline" :class="getImportanceClass(stylesheet.importance)">{{ stylesheet.importance }}</div>
+                <div class="badge badge-info badge-xs badge-outline">{{ (stylesheet.content.length / 1024).toFixed(1) }} KB</div>
+            </div>
+            <div class="text-[10px] opacity-80">@media {{ stylesheet.media }}</div>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+            <button class="btn btn-xs btn-primary rounded" @click="downloadContents">
+                <download class="size-3.5"/>
+            </button>
+            <button class="btn btn-xs btn-primary btn-outline rounded" @click="copyContents">
+                <copy class="size-3.5"/>
+            </button>
+        </div>
+    </div>
+</template>

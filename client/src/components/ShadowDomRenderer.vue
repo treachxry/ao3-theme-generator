@@ -11,7 +11,7 @@
     }>();
 
     const containerEl = useTemplateRef('container');
-    const shadowRoot = ref<ShadowRoot>();
+    const shadowRoot = ref<ShadowRoot | null>(null);
 
     onMounted(onInitialize);
     watch(() => styleSheets, onStyleChange);

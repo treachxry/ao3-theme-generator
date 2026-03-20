@@ -1,8 +1,18 @@
-export function useSimulatedDocument() {
-    const HTML_CLASS = 'shadow-html';
-    const BODY_CLASS = 'shadow-body';
+import { computed, ComputedRef, Ref } from "vue";
 
-    function getDocumentStyles(): CSSStyleSheet {
+export interface ISimulatedDocument {
+    documentRoot: ComputedRef<Node>
+    documentStyle: ComputedRef<CSSStyleSheet>
+}
+
+export function useSimulatedDocument(html: Readonly<Ref<string>>): ISimulatedDocument {
+    const HTML_WRAPPER_CLASS = 'shadow-html';
+    const BODY_WRAPPER_CLASS = 'shadow-body';
+
+    const documentRoot = computed(getDocumentRoot);
+    const documentStyle = computed(getDefaultStylesheet);
+
+    function getDefaultStylesheet(): CSSStyleSheet {
         const sheet = new CSSStyleSheet();
 
         sheet.replaceSync(`
@@ -11,11 +21,11 @@ export function useSimulatedDocument() {
                 display: block;
             }
 
-            .${HTML_CLASS} {
+            .${HTML_WRAPPER_CLASS} {
                 height: 100%;
             }
 
-            .${BODY_CLASS} {
+            .${BODY_WRAPPER_CLASS} {
                 height: 100%;
                 overflow: auto;
             }
@@ -24,8 +34,8 @@ export function useSimulatedDocument() {
         return sheet;
     }
 
-    function getDocumentRoot(html: string): HTMLElement {
-        const document = parseDocument(html);
+    function getDocumentRoot(): HTMLElement {
+        const document = parseDocument(html.value);
 
         cleanDocument(document);
 
@@ -52,10 +62,10 @@ export function useSimulatedDocument() {
 
     function wrapDocument(document: Document): HTMLElement {
         const htmlWrapper = document.createElement('div');
-        htmlWrapper.className = HTML_CLASS;
+        htmlWrapper.className = HTML_WRAPPER_CLASS;
 
         const bodyWrapper = document.createElement('div');
-        bodyWrapper.className = BODY_CLASS;
+        bodyWrapper.className = BODY_WRAPPER_CLASS;
 
         htmlWrapper.appendChild(bodyWrapper);
 
@@ -67,7 +77,7 @@ export function useSimulatedDocument() {
     }
 
     return {
-        getDocumentRoot,
-        getDocumentStyles
+        documentRoot,
+        documentStyle
     };
 }

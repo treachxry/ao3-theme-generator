@@ -1,0 +1,19 @@
+<script setup lang="ts">
+
+</script>
+
+<template>
+    <div class="p-8 flex flex-col gap-4 text-lg">
+        <h1 class="text-2xl underline font-bold mb-2">What is this?</h1>
+        <div>
+            TODO
+        </div>
+
+        <footer class="absolute inset-0 top-auto px-4 py-2 font-mono bg-base-200">
+            <div class="flex items-center justify-end gap-8 text-primary text-xs">
+                <a href="https://github.com/treachxry/ao3-theme-generator" class="link link-primary">Source code</a>
+                <span>Made by <a href="https://github.com/treachxry" class="link link-primary">treachxry</a></span>
+            </div>
+        </footer>
+    </div>
+</template>

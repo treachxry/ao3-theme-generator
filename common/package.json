@@ -1,0 +1,14 @@
+{
+  "name": "common",
+  "type": "module",
+  "exports": {
+    "./models": "./src/models.ts",
+    "./functions": "./src/functions.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "./models/*": ["./src/models/*"],
+      "./functions/*": ["./src/functions/*"]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { getHostUrl } from "shared/functions";
+import { getHostUrl } from "common/functions";
 import { AppContext } from "@/models/AppContext";
 import { fetchPage } from "@/services/pages.service";
 

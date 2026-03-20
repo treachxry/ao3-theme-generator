@@ -1,6 +1,6 @@
 import { contentJson, OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { ThemeInfo } from "shared/models";
+import { ThemeInfo } from "common/models";
 import { AppContext } from "@/models/AppContext";
 import { generateCss } from "@/services/css.service";
 

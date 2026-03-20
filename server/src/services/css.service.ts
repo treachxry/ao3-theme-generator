@@ -1,7 +1,7 @@
 import postcss from "postcss";
-import { CssAsset, CssAssetImportance, Theme } from "shared/models";
+import { CssAsset, AssetImportance, Theme } from "common/models";
 import { join } from "node:path";
-import { createProperty, createRule, mergeRules } from "shared/functions";
+import { createProperty, createRule, mergeRules } from "common/functions";
 import { AppContext } from "@/models/AppContext";
 import { CssAssetType } from "@/models/CssAssetType";
 import { CssAssetInfo } from "@/models/CssAssetInfo";
@@ -254,30 +254,30 @@ const sheets: CssAssetInfo[] = [
         description: 'General',
         media: 'all',
         filename: 'media-all.css',
-        importance: CssAssetImportance.Required,
+        importance: AssetImportance.Required,
     },
     {
         description: 'Midsize',
         media: 'only screen and (max-width: 62em)',
         filename: 'media-midsize.css',
-        importance: CssAssetImportance.Recommended,
+        importance: AssetImportance.Recommended,
     },
     {
         description: 'Narrow',
         media: 'only screen and (max-width: 42em)',
         filename: 'media-narrow.css',
-        importance: CssAssetImportance.Required,
+        importance: AssetImportance.Required,
     },
     {
         description: 'Speech',
         media: 'speech',
         filename: 'media-aural.css',
-        importance: CssAssetImportance.Optional,
+        importance: AssetImportance.Optional,
     },
     {
         description: 'Print',
         media: 'print',
         filename: 'media-print.css',
-        importance: CssAssetImportance.Optional
+        importance: AssetImportance.Optional
     }
 ];

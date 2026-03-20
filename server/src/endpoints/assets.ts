@@ -1,5 +1,5 @@
 import { OpenAPIRoute } from "chanfana";
-import { CssAssetBundle } from "shared/models";
+import { CssAssetBundle } from "common/models";
 import { AppContext } from "@/models/AppContext";
 import { CssAssetType } from "@/models/CssAssetType";
 import { getTheme, readStyleAssets } from "@/services/css.service";

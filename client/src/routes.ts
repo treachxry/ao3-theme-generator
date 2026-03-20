@@ -1,14 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "@/routes/HomeView.vue";
-import SiteSkinView from "@/routes/SiteSkinView.vue";
-import WorkSkinView from "@/routes/WorkSkinView.vue";
-import NotFoundView from "@/routes/NotFoundView.vue";
 
 const routes = [
-    {path: '/', component: HomeView},
-    {path: '/site-skin', component: SiteSkinView},
-    {path: '/work-skin', component: WorkSkinView},
-    {path: '/:pathName(.*)', component: NotFoundView}
+    {
+        path: '/',
+        component: () => import("@/pages/home/HomePage.vue")
+    },
+    {
+        path: '/editor',
+        component: () => import("@/pages/editor/EditorPage.vue")
+    },
+    {
+        path: '/skins',
+        component: () => import("@/pages/skins/SkinsPage.vue")
+    },
+    {
+        path: '/:pathName(.*)',
+        component: () => import("@/components/NotFound.vue")
+    }
 ];
 
 export const router = createRouter({
