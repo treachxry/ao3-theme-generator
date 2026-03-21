@@ -1,31 +1,44 @@
 <script setup lang="ts">
-    import { nextTick } from "vue";
+    import { computed, useTemplateRef } from "vue";
     import { House, ArrowLeft, ArrowRight, RotateCw, Menu, FileCode } from "lucide-vue-next";
-    import BrowserUrl from "@/pages/editor/BrowserUrl.vue";
+    import { getHostUrl } from "common/functions";
+    import { useEditorStore } from "@/stores/useEditorStore";
+    import { IHistory } from "@/composables/useHistory";
     import ToolbarMenu from "@/pages/editor/ToolbarMenu.vue";
     import ThemeResult from "@/pages/editor/ThemeResult.vue";
-    import { useEditorStore } from "@/stores/useEditorStore";
-
-    const {baseUrl} = defineProps<{
-        baseUrl: string
-    }>();
 
     const {generatedThemes} = useEditorStore();
 
-    const url = defineModel<string>({
-        required: true
+    const {history} = defineProps<{
+        history: IHistory
+    }>();
+
+    const inputElement = useTemplateRef('url-input');
+
+    const displayUrl = computed<string>(() => {
+        return getHostUrl() + history.location.value;
     });
 
-    function onNavigate(value: string) {
-        url.value = value;
+    function onKeyDown(e: KeyboardEvent): void {
+        if(e.key === 'Enter') {
+            inputElement.value?.blur();
+        }
     }
 
-    async function onReload() {
-        const value = url.value;
+    function onFocusOut() {
+        if(!inputElement.value) {
+            return;
+        }
 
-        url.value = '';
-        await nextTick();
-        url.value = value;
+        try {
+            const url = new URL(inputElement.value.value);
+            const path = url.pathname + url.search + url.hash;
+
+            history.push(path);
+        }
+        catch {
+            inputElement.value.value = displayUrl.value;
+        }
     }
 
     function removeTheme(index: number) {
@@ -36,27 +49,45 @@
 <template>
     <div class="flex gap-4 items-center justify-between px-2 relative">
         <div class="flex items-center gap-2">
-            <button class="btn btn-ghost p-1" :class="{'btn-disabled': true}" title="Go back one page">
+            <button
+                class="btn btn-ghost p-1"
+                :class="{'btn-disabled': !history.canBack.value}"
+                title="Go back one page"
+                @click="history.back()"
+            >
                 <arrow-left class="size-5"/>
             </button>
-            <button class="btn btn-ghost p-1" :class="{'btn-disabled': true}" title="Go forward one page">
+
+            <button
+                class="btn btn-ghost p-1"
+                :class="{'btn-disabled': !history.canForward.value}"
+                title="Go forward one page"
+                @click="history.forward()"
+            >
                 <arrow-right class="size-5"/>
             </button>
-            <button class="btn btn-ghost p-1" @click="onReload" title="Reload current page">
+
+            <button
+                class="btn btn-ghost p-1"
+                title="Reload current page"
+                @click="history.reload()"
+            >
                 <rotate-cw class="size-5"/>
             </button>
         </div>
 
         <div class="flex items-center gap-2">
-            <button class="btn btn-ghost p-1" @click="onNavigate('/')" title="Go to home page">
+            <button class="btn btn-ghost p-1" @click="history.push('/')" title="Go to home page">
                 <house class="size-5"/>
             </button>
 
-            <browser-url
-                :origin="baseUrl"
-                :pathname="url"
-                @change="onNavigate"
+            <input
+                type="text"
                 class="input input-sm bg-base-200 outline-0 w-80"
+                ref="url-input"
+                :value="displayUrl"
+                @focusout="onFocusOut"
+                @keydown="onKeyDown"
             />
         </div>
 

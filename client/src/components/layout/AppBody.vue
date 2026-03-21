@@ -4,7 +4,7 @@
     import LoadingIndicator from "@/components/ui/LoadingIndicator.vue";
 
     defineProps<{
-        component: any
+        component: string | object
         routeKey: string
     }>();
 </script>

@@ -4,17 +4,17 @@ import { Dirent } from "node:fs";
 import postcss, { Processor } from "postcss";
 import { getPlugins } from "@/functions/css-plugins";
 import { writeServerAsset } from "@/services/assets.service";
-import { CssAssetType } from "@/models/CssAssetType";
+import { GenerateTaskType } from "@/models/GenerateTaskType";
 
 const CSS_INPUT_PATH = 'src/assets/inputs';
 
 export async function generateStyles(fixUrls: boolean): Promise<void> {
     const postCss = postcss(getPlugins({
-        type: CssAssetType.PREPARED,
+        type: GenerateTaskType.Prepare,
         baseUrl: fixUrls ? '/ao3-theme-generator' : undefined
     }));
 
-    const outputDir = fixUrls ? 'prepared' : 'raw';
+    const outputDir = fixUrls ? GenerateTaskType.Prepare : GenerateTaskType.Raw;
     const files = await readdir(CSS_INPUT_PATH, {withFileTypes: true});
 
     await Promise.all(files.map(file => preprocessStyleSheet(postCss, file, outputDir)));

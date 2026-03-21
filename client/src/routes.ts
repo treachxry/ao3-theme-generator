@@ -3,15 +3,15 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
     {
         path: '/',
-        component: () => import("@/pages/home/HomePage.vue")
+        component: () => import("@/pages/home/Home.vue")
     },
     {
         path: '/editor',
-        component: () => import("@/pages/editor/EditorPage.vue")
+        component: () => import("@/pages/editor/Editor.vue")
     },
     {
         path: '/skins',
-        component: () => import("@/pages/skins/SkinsPage.vue")
+        component: () => import("@/pages/skins/Skins.vue")
     },
     {
         path: '/:pathName(.*)',

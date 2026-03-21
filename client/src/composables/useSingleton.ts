@@ -19,7 +19,7 @@ export function useSingleton<TUse, TState>(useFn: (state: TState) => TUse): ISin
     function useComposable(): TUse {
         const composable = inject<TUse>(key);
 
-        if(!composable) {
+        if(composable === undefined) {
             throw new Error('Missing provided composable');
         }
 

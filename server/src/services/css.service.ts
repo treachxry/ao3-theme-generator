@@ -3,7 +3,7 @@ import { CssAsset, AssetImportance, Theme } from "common/models";
 import { join } from "node:path";
 import { createProperty, createRule, mergeRules } from "common/functions";
 import { AppContext } from "@/models/AppContext";
-import { CssAssetType } from "@/models/CssAssetType";
+import { GenerateTaskType } from "@/models/GenerateTaskType";
 import { CssAssetInfo } from "@/models/CssAssetInfo";
 import { readServerAsset } from "@/services/assets.service";
 import { getPlugins } from "@/functions/css-plugins";
@@ -13,7 +13,7 @@ export function getTheme(): Theme {
 }
 
 export async function generateCss(c: AppContext, variables: string[][], options: {} = {}): Promise<CssAsset[]> {
-    const assetType = CssAssetType.RAW;
+    const assetType = GenerateTaskType.Raw;
     const properties = variables.map(v => createProperty(v[0], v[1]));
     const plugins = getPlugins({type: assetType})
 
@@ -32,7 +32,7 @@ export async function generateCss(c: AppContext, variables: string[][], options:
     }));
 }
 
-export async function readStyleAssets(context: AppContext, type: CssAssetType): Promise<CssAsset[]> {
+export async function readStyleAssets(context: AppContext, type: GenerateTaskType): Promise<CssAsset[]> {
     const directory = `/${type}`;
 
     const stylesheets = await Promise.all(sheets.map(s => {

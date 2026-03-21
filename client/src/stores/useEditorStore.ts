@@ -7,11 +7,11 @@ import { createMediaQueryWrapped } from "common/functions";
 import { CssAsset, Theme, ThemeInfo, BuildStatus, GeneratedTheme } from "common/models";
 
 export interface IEditorStore {
+    theme: ComputedRef<Theme>
     resetVariables: () => void
     createTheme: () => Promise<void>
     variables: Ref<Record<string, string>>
     generatedThemes: Ref<GeneratedTheme[]>
-    theme: ComputedRef<Theme>
     previewStyles: ComputedRef<CSSStyleSheet[]>
 }
 
@@ -28,28 +28,27 @@ export {
 }
 
 function useEditorStore(state: IEditorStoreInitState): IEditorStore {
-    const theme = computed(() => state.theme);
-    const variables = useStorageRef('tg-variables', getDefaultVariables);
-    const generatedThemes = useStorageRef<GeneratedTheme[]>('tg-theme-outputs', () => []);
-    const themeSheet = useVariableStylesheet(variables, getUnit);
+    // state
+    const theme = computed(() => {
+        return state.theme;
+    });
 
-    const previewStyles = computed(() => [
-        themeSheet.value,
-        ...state.stylesheets.map(s => createMediaQueryWrapped(s.media, s.content))
-    ]);
+    const stylesheets = computed(() => {
+        return state.stylesheets.map(s => createMediaQueryWrapped(s.media, s.content));
+    });
 
-    function getDefaultVariables(): Record<string, string> {
-        return themeToVariableMap(theme.value);
-    }
+    // variables
+
+    const variables = useStorageRef('tg-variables', () => getDefaultVariables(theme.value));
 
     function resetVariables(): void {
-        variables.value = getDefaultVariables();
+        variables.value = getDefaultVariables(theme.value);
     }
 
-    function themeToVariableMap(theme: Theme): Record<string, string> {
+    function getDefaultVariables(theme: Theme): Record<string, string> {
         const results: Record<string, string> = {};
 
-        theme.colors?.forEach(group => {
+        theme.colors.forEach(group => {
             group.items.forEach(p => {
                 results[p.key] = p.value;
             });
@@ -70,6 +69,11 @@ function useEditorStore(state: IEditorStoreInitState): IEditorStore {
         return results;
     }
 
+    // preview
+
+    const variableStylesheet = useVariableStylesheet(variables, getUnit);
+    const previewStyles = computed(() => [variableStylesheet.value, ...stylesheets.value]);
+
     function getUnit(key: string): string {
         const size = theme.value.sizes.find(x => x.key === key);
 
@@ -85,6 +89,10 @@ function useEditorStore(state: IEditorStoreInitState): IEditorStore {
 
         return '';
     }
+
+    // generation
+
+    const generatedThemes = useStorageRef<GeneratedTheme[]>('tg-theme-outputs', () => []);
 
     async function createTheme(): Promise<void> {
         try {
@@ -122,11 +130,18 @@ function useEditorStore(state: IEditorStoreInitState): IEditorStore {
     }
 
     return {
-        resetVariables,
-        createTheme,
-        variables,
-        generatedThemes,
+        // state
         theme,
-        previewStyles
+
+        // variables
+        variables,
+        resetVariables,
+
+        // preview
+        previewStyles,
+
+        // generation
+        createTheme,
+        generatedThemes,
     };
 }

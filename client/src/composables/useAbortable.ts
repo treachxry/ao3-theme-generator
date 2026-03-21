@@ -1,6 +1,8 @@
 import { onBeforeUnmount } from "vue";
 
-export async function useAbortable<T>(callback: (signal: AbortSignal, abort: () => void) => Promise<T>): Promise<T> {
+export type IAbortableCallback<T> = (signal: AbortSignal, abort: () => void) => Promise<T>
+
+export async function useAbortable<T>(callback: IAbortableCallback<T>): Promise<T> {
     const controller: AbortController = new AbortController();
 
     function abort(): void {

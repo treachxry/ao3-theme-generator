@@ -1,6 +1,6 @@
-import { CssAssetType } from "@/models/CssAssetType";
+import { GenerateTaskType } from "@/models/GenerateTaskType";
 
 export interface CssPluginOptions {
-    type: CssAssetType
+    type: GenerateTaskType
     baseUrl?: string
 }

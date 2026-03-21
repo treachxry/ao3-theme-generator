@@ -28,10 +28,6 @@
         onStyleChange(styleSheets);
     }
 
-    function onNavigate(url: string): void {
-        emits('navigate', url);
-    }
-
     function onStyleChange(stylesheets: CSSStyleSheet[]): void {
         if(!shadowRoot.value) {
             return;
@@ -53,7 +49,7 @@
             return;
         }
 
-        onNavigate(link.href);
+        emits('navigate', link.href);
     }
 </script>
 

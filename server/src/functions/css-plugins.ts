@@ -11,12 +11,12 @@ import postcssRewriteURL from "@csstools/postcss-rewrite-url";
 import postcssMinify from "@csstools/postcss-minify";
 import cssFunctions from "@/functions/css-functions";
 import { CssPluginOptions } from "@/models/CssPluginOptions";
-import { CssAssetType } from "@/models/CssAssetType";
+import { GenerateTaskType } from "@/models/GenerateTaskType";
 
 export function getPlugins(options: CssPluginOptions) {
     const plugins = [];
 
-    if(options.type === CssAssetType.PREPARED) {
+    if(options.type === GenerateTaskType.Prepare) {
         plugins.push(
             postcssImports,
             postcssFunctions({
@@ -39,7 +39,7 @@ export function getPlugins(options: CssPluginOptions) {
             postcssMinify
         );
     }
-    else if(options.type === CssAssetType.RAW) {
+    else if(options.type === GenerateTaskType.Raw) {
         plugins.push(
             postcssOklabFunction({
                 preserve: false,

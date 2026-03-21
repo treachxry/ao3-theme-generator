@@ -1,35 +1,23 @@
 <script setup lang="ts">
     import { ref } from "vue";
-    import { fetchPages } from "@/functions/api";
-    import { useAbortable } from "@/composables/useAbortable";
+    import { useAbortable, IAbortableCallback } from "@/composables/useAbortable";
     import { useSimulatedDocument } from "@/composables/useSimulatedDocument";
     import ShadowDomRenderer from "@/components/ShadowDomRenderer.vue";
 
-    const {stylesheets} = defineProps<{
+    const {stylesheets, getHtml} = defineProps<{
         stylesheets: CSSStyleSheet[]
-    }>()
+        getHtml: IAbortableCallback<string>
+    }>();
 
-    const url = defineModel<string>({
-        required: true
-    });
+    const emits = defineEmits<{
+        (e: 'navigate', url: string): void
+    }>();
 
-    const html = ref(await useAbortable(fetchHtml));
+    const html = ref(await useAbortable(getHtml));
     const {documentRoot, documentStyle} = useSimulatedDocument(html);
 
-    async function fetchHtml(signal: AbortSignal): Promise<string> {
-        const response = await fetchPages(url.value, signal);
-
-        if(!response.ok) {
-            throw new Error(`Failed to fetch page (${response.status} ${response.statusText})`);
-        }
-
-        return response.text();
-    }
-
-    function onNavigate(value: string): void {
-        const u = new URL(value);
-
-        url.value = u.pathname + u.search;
+    function onNavigate(url: string): void {
+        emits('navigate', url);
     }
 </script>
 
