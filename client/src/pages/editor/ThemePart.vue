@@ -1,19 +1,19 @@
 <script setup lang="ts">
-    import { CssAsset, AssetImportance } from "common/models";
+    import { SkinChunk, ChunkImportance } from "common/models";
     import { downloadFile } from "@/functions/file-utils";
     import { Download, Copy } from "lucide-vue-next";
 
     const {stylesheet} = defineProps<{
-        stylesheet: CssAsset
+        stylesheet: SkinChunk
     }>();
 
-    function getImportanceClass(importance: AssetImportance) {
+    function getImportanceClass(importance: ChunkImportance) {
         switch(importance) {
-            case AssetImportance.Required:
+            case ChunkImportance.Required:
                 return 'badge-error';
-            case AssetImportance.Recommended:
+            case ChunkImportance.Recommended:
                 return 'badge-warning';
-            case AssetImportance.Optional:
+            case ChunkImportance.Optional:
                 return 'opacity-60';
         }
     }

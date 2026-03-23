@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { X } from "lucide-vue-next";
-    import { GeneratedTheme } from "common/models";
+    import { GeneratedSkin } from "@/models/GeneratedSkin";
     import ThemePart from "@/pages/editor/ThemePart.vue";
 
     const {theme, close} = defineProps<{
-        theme: GeneratedTheme
+        theme: GeneratedSkin
         close: () => void
     }>();
 </script>
@@ -24,7 +24,7 @@
                 <div class="underline">Stylesheets</div>
                 <div class="grid px-1.5 py-3">
                     <theme-part
-                        v-for="(stylesheet, i) in theme.stylesheets"
+                        v-for="(stylesheet, i) in theme.chunks"
                         :stylesheet="stylesheet"
                         :class="{'mt-2.5 pt-1.5 border-t border-base-content/50': i !== 0}"
                     />

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ColorGroup, ColorVar } from "common/models";
+    import { ColorGroup, ColorVariable } from "common/models";
 
     const {group} = defineProps<{
         group: ColorGroup
@@ -21,19 +21,19 @@
         };
     }
 
-    function getColorCellStyle(group: ColorGroup, color: ColorVar) {
-        const bgKey = color.isContent ? group.items.find(c => !c.isContent)?.key : color.key;
-        const fgKey = group.items.find(c => c.isContent)?.key;
+    function getColorCellStyle(group: ColorGroup, color: ColorVariable) {
+        const bgKey = color.foreground ? group.items.find(c => !c.foreground)?.key : color.key;
+        const fgKey = group.items.find(c => c.foreground)?.key;
 
         return {
             backgroundColor: bgKey ? variableValues.value[bgKey] : undefined,
             color: fgKey ? variableValues.value[fgKey] : undefined,
-            fontSize: color.isContent ? '18px' : '12px'
+            fontSize: color.foreground ? '18px' : '12px'
         }
     }
 
-    function colorText(color: ColorVar): string {
-        if(color.isContent) {
+    function colorText(color: ColorVariable): string {
+        if(color.foreground) {
             return 'A';
         }
 

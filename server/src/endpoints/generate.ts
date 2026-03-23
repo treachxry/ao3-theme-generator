@@ -1,8 +1,8 @@
-import { contentJson, OpenAPIRoute } from "chanfana";
 import { z } from "zod";
-import { ThemeInfo } from "common/models";
-import { AppContext } from "@/models/AppContext";
+import { contentJson, OpenAPIRoute } from "chanfana";
 import { generateCss } from "@/services/css.service";
+import { SkinChunk } from "common/models";
+import { AppContext } from "@/models/AppContext";
 
 export class Generate extends OpenAPIRoute {
     schema = {
@@ -14,12 +14,8 @@ export class Generate extends OpenAPIRoute {
     async handle(c: AppContext) {
         const {body} = await this.getValidatedData<typeof this.schema>();
 
-        const stylesheets = await generateCss(c, body);
+        const stylesheets: SkinChunk[] = await generateCss(c, body);
 
-        const data: ThemeInfo = {
-            stylesheets: stylesheets
-        };
-
-        return c.json(data);
+        return c.json(stylesheets);
     }
 }

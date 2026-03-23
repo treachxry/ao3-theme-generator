@@ -20,5 +20,12 @@ export default defineConfig({
         __URL_BASE__: JSON.stringify('/ao3-theme-generator'),
         __API_URL_DEV__: JSON.stringify('http://localhost:8787'),
         __API_URL__: JSON.stringify('https://ao3-theme-generator.treachery.workers.dev')
+    },
+    build: {
+        rolldownOptions: {
+            output: {
+                sanitizeFileName: name => name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9_.-]/g, '')
+            }
+        }
     }
 });

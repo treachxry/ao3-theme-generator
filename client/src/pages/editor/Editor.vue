@@ -3,9 +3,13 @@
     import { fetchAssets, fetchPages } from "@/functions/api";
     import { useStorage } from "@/composables/useStorage";
     import { useCache } from "@/composables/useCache";
+    import { useStorageRef } from "@/composables/useStorageRef";
+    import { useVariableStylesheet } from "@/composables/useVariableStylesheet";
+    import { createMediaQueryWrapped } from "common/functions";
     import { IHistory, useHistory } from "@/composables/useHistory";
-    import { initializeEditorStore } from "@/stores/useEditorStore";
-    import { CssAssetBundle } from "common/models";
+    import { initializeSkinStore } from "@/stores/useSkinStore";
+    import { initializeSchemaStore } from "@/stores/useSchemaStore";
+    import { SkinChunk } from "common/models";
     import ThemeSettings from "@/pages/editor/ThemeSettings.vue";
     import ErrorBoundary from "@/components/ui/ErrorBoundary.vue";
     import ErrorPanel from "@/components/ui/ErrorPanel.vue";
@@ -13,22 +17,30 @@
     import BrowserToolbar from "@/pages/editor/BrowserToolbar.vue";
     import LoadingIndicator from "@/components/ui/LoadingIndicator.vue";
 
-    const {previewStyles} = initializeEditorStore(await initializeAssets());
+    initializeSkinStore('tg-skins');
+    const {getDefaultVariables, getUnit} = initializeSchemaStore();
+
+    const stylesheets = await initializeStylesheets();
+    const variables = useStorageRef('tg-variables', getDefaultVariables);
+    const variableStylesheet = useVariableStylesheet(variables, getUnit);
 
     const history = createHistory();
 
-    const pageCache = useCache<string, string>({
-        maxItems: 16
-    });
+    const pageCache = useCache<string, string>(
+        new Map<string, string>(),
+        {maxItems: 16}
+    );
 
-    async function initializeAssets(): Promise<CssAssetBundle> {
+    async function initializeStylesheets(): Promise<CSSStyleSheet[]> {
         const response = await fetchAssets();
 
         if(!response.ok) {
             throw new Error(`Couldn't fetch assets from server. Is the server online?`);
         }
 
-        return response.json();
+        const stylesheetAssets: SkinChunk[] = await response.json();
+
+        return stylesheetAssets.map(s => createMediaQueryWrapped(s.media, s.content))
     }
 
     async function getHtml(signal: AbortSignal): Promise<string> {
@@ -75,7 +87,7 @@
 <template>
     <div class="absolute inset-0 flex">
         <div class="overflow-y-auto min-w-64 w-64 p-3 my-2">
-            <theme-settings/>
+            <theme-settings v-model="variables"/>
         </div>
 
         <div class="overflow-y-auto grow">
@@ -89,7 +101,7 @@
                                 <suspense timeout="0">
                                     <browser-body
                                         :getHtml="getHtml"
-                                        :stylesheets="previewStyles"
+                                        :stylesheets="[variableStylesheet, ...stylesheets]"
                                         @navigate="onNavigate"
                                     />
                                     <template #fallback>

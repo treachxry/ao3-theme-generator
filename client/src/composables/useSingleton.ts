@@ -5,7 +5,7 @@ export interface ISingleton<TUse, TState> {
     useComposable: () => TUse
 }
 
-export function useSingleton<TUse, TState>(useFn: (state: TState) => TUse): ISingleton<TUse, TState> {
+export function useSingleton<TUse, TState = void>(useFn: (state: TState) => TUse): ISingleton<TUse, TState> {
     const key = Symbol();
 
     function initializeComposable(state: TState): TUse {

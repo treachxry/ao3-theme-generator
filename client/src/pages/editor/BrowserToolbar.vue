@@ -2,12 +2,12 @@
     import { computed, useTemplateRef } from "vue";
     import { House, ArrowLeft, ArrowRight, RotateCw, Menu, FileCode } from "lucide-vue-next";
     import { getHostUrl } from "common/functions";
-    import { useEditorStore } from "@/stores/useEditorStore";
     import { IHistory } from "@/composables/useHistory";
+    import { useSkinStore } from "@/stores/useSkinStore";
     import ToolbarMenu from "@/pages/editor/ToolbarMenu.vue";
     import ThemeResult from "@/pages/editor/ThemeResult.vue";
 
-    const {generatedThemes} = useEditorStore();
+    const {skins, removeSkin} = useSkinStore();
 
     const {history} = defineProps<{
         history: IHistory
@@ -39,10 +39,6 @@
         catch {
             inputElement.value.value = displayUrl.value;
         }
-    }
-
-    function removeTheme(index: number) {
-        generatedThemes.value.splice(index, 1);
     }
 </script>
 
@@ -94,11 +90,11 @@
         <div class="flex items-center gap-2">
             <toolbar-menu :icon="FileCode">
                 <div class="grid text-sm overflow-y-auto w-80 max-h-120 p-1">
-                    <template v-if="generatedThemes.length">
+                    <template v-if="skins.length">
                         <theme-result
-                            v-for="(theme, i) in generatedThemes"
-                            :theme="theme"
-                            @clear="removeTheme(i)"
+                            v-for="(skin, i) in skins"
+                            :theme="skin"
+                            @clear="removeSkin(i)"
                         />
                     </template>
                     <div v-else class="text-nowrap px-2 py-1">

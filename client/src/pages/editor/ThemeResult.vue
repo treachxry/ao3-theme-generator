@@ -3,11 +3,11 @@
     import JSZip from "jszip";
     import { FolderDown, Check, Trash2, FileText } from "lucide-vue-next";
     import { downloadFile, getFileSizeWithUnit } from "@/functions/file-utils";
-    import { GeneratedTheme } from "common/models";
+    import { GeneratedSkin } from "@/models/GeneratedSkin";
     import ThemeResultDetails from "@/pages/editor/ThemeResultDetails.vue";
 
     const {theme} = defineProps<{
-        theme: GeneratedTheme
+        theme: GeneratedSkin
     }>();
 
     const emits = defineEmits<{
@@ -17,7 +17,7 @@
     const detailsOpen = ref<boolean>(false);
 
     const totalSize = computed<string>(() => {
-        const totalBytes = theme.stylesheets.reduce((sum, sheet) => sum + sheet.content.length, 0);
+        const totalBytes = theme.chunks.reduce((sum, sheet) => sum + sheet.content.length, 0);
         const {size, unit} = getFileSizeWithUnit(totalBytes);
 
         return `${size.toPrecision(4)} ${unit}`;
@@ -26,7 +26,7 @@
     async function downloadTheme(): Promise<void> {
         const zip = new JSZip();
 
-        for(const stylesheet of theme.stylesheets) {
+        for(const stylesheet of theme.chunks) {
             zip.file(stylesheet.filename, stylesheet.content);
         }
 

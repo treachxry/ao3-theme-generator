@@ -1,3 +1,3 @@
-import { CssAsset } from "common/models";
+import { SkinChunk } from "common/models";
 
-export type CssAssetInfo = Omit<CssAsset, 'content'>
+export type CssAssetInfo = Omit<SkinChunk, 'content'>

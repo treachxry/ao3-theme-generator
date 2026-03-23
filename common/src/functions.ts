@@ -1,2 +1,2 @@
-export * from "./functions/CssUtils";
-export * from "./functions/HtmlUtils";
+export * from "./functions/css-utils";
+export * from "./functions/hmtl-utils";

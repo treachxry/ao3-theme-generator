@@ -6,15 +6,12 @@ export interface ICache<TKey, TValue> {
 }
 
 export interface ICacheOptions<TKey, TValue> {
-    maxItems: number
+    maxItems?: number
 }
 
-export function useCache<TKey, TValue>(options?: ICacheOptions<TKey, TValue>): ICache<TKey, TValue> {
-    const items: Map<TKey, TValue> = new Map<TKey, TValue>();
-    const maxItems: number = options?.maxItems ?? 64;
-
+export function useCache<TKey, TValue>(storage: Map<TKey, TValue>, options: ICacheOptions<TKey, TValue> = {}): ICache<TKey, TValue> {
     function get(key: TKey, getter: () => TValue): TValue {
-        const item = items.get(key);
+        const item = storage.get(key);
 
         if(item !== undefined) {
             return item;
@@ -24,7 +21,7 @@ export function useCache<TKey, TValue>(options?: ICacheOptions<TKey, TValue>): I
     }
 
     async function getAsync(key: TKey, getter: () => Promise<TValue>): Promise<TValue> {
-        const item = items.get(key);
+        const item = storage.get(key);
 
         if(item !== undefined) {
             return item;
@@ -34,25 +31,27 @@ export function useCache<TKey, TValue>(options?: ICacheOptions<TKey, TValue>): I
     }
 
     function insertNew(key: TKey, value: TValue): TValue {
-        if(maxItems > 0 && items.size > maxItems) {
-            const firstKey = items.keys().next().value;
+        const maxItems: number = options.maxItems ?? 64;
+
+        if(maxItems > 0 && storage.size > maxItems) {
+            const firstKey = storage.keys().next().value;
 
             if(firstKey !== undefined) {
-                items.delete(firstKey);
+                storage.delete(firstKey);
             }
         }
 
-        items.set(key, value);
+        storage.set(key, value);
 
         return value;
     }
 
     function clear(): void {
-        items.clear();
+        storage.clear();
     }
 
     function entries(): MapIterator<[TKey, TValue]> {
-        return items.entries();
+        return storage.entries();
     }
 
     return {
