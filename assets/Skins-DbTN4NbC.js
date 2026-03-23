@@ -1,1 +1,0 @@
-import{_ as o,o as n,c as s,d as t,a as r}from"./index-BmEJ4G8U.js";const a={},c={class:"text-2xl font-bold font-mono mt-20 text-center"};function l(d,e){return n(),s("div",c,[...e[0]||(e[0]=[t(" [Skins page]",-1),r("br",null,null,-1),t(" To be implemented ",-1)])])}const f=o(a,[["render",l]]);export{f as default};

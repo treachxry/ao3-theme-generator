@@ -1,0 +1,1 @@
+import{f as e,l as t,m as n,t as r,w as i}from"./plugin-vueexport-helper-DmQc0xM9.js";var a={},o={class:`text-2xl font-bold font-mono mt-20 text-center`};function s(r,a){return i(),e(`div`,o,[...a[0]||=[n(` [Skins page]`,-1),t(`br`,null,null,-1),n(` To be implemented `,-1)]])}var c=r(a,[[`render`,s]]);export{c as default};
