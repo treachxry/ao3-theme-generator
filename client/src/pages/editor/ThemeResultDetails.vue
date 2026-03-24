@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { X } from "lucide-vue-next";
+    import { X } from "@lucide/vue";
     import { GeneratedSkin } from "@/models/GeneratedSkin";
     import ThemePart from "@/pages/editor/ThemePart.vue";
 

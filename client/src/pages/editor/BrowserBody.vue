@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from "vue";
-    import { useAbortable, IAbortableCallback } from "@/composables/useAbortable";
     import { useSimulatedDocument } from "@/composables/useSimulatedDocument";
+    import { useAbortable, IAbortableCallback } from "@/composables/useAbortable";
     import ShadowDomRenderer from "@/components/ShadowDomRenderer.vue";
 
     const {stylesheets, getHtml} = defineProps<{
@@ -26,6 +26,13 @@
         :root-node="documentRoot"
         :style-sheets="[documentStyle, ...stylesheets]"
         @navigate="onNavigate"
-        class="z-0 relative"
+        class="dom-container"
     />
 </template>
+
+<style scoped>
+    .dom-container {
+        contain: layout style;
+        content-visibility: auto;
+    }
+</style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { PaintBucket, SquareRoundCorner, Ruler, RotateCcw, Zap, Flame } from "lucide-vue-next";
+    import { PaintBucket, SquareRoundCorner, Ruler, RotateCcw, Zap, Flame } from "@lucide/vue";
     import { fetchTheme } from "@/functions/api";
     import { SkinChunk } from "common/models";
     import { useSkinStore } from "@/stores/useSkinStore";

@@ -1,8 +1,8 @@
+import { defineConfig } from "vite";
+import { fileURLToPath } from "node:url";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
-import { fileURLToPath } from "node:url";
 
 export default defineConfig({
     base: '/ao3-theme-generator',
@@ -17,15 +17,10 @@ export default defineConfig({
         tailwindcss()
     ],
     define: {
+        __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+        __BUILD_DATE__: new Date(),
         __URL_BASE__: JSON.stringify('/ao3-theme-generator'),
         __API_URL_DEV__: JSON.stringify('http://localhost:8787'),
         __API_URL__: JSON.stringify('https://ao3-theme-generator.treachery.workers.dev')
-    },
-    build: {
-        rolldownOptions: {
-            output: {
-                sanitizeFileName: name => name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9_.-]/g, '')
-            }
-        }
     }
 });

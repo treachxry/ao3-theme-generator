@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from "vue";
-    import { House, ArrowLeft, ArrowRight, RotateCw, Menu, FileCode } from "lucide-vue-next";
+    import { House, ArrowLeft, ArrowRight, RotateCw, Menu, FileCode } from "@lucide/vue";
     import { getHostUrl } from "common/functions";
     import { IHistory } from "@/composables/useHistory";
     import { useSkinStore } from "@/stores/useSkinStore";

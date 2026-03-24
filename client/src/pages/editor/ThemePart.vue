@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { SkinChunk, ChunkImportance } from "common/models";
     import { downloadFile } from "@/functions/file-utils";
-    import { Download, Copy } from "lucide-vue-next";
+    import { Download, Copy } from "@lucide/vue";
 
     const {stylesheet} = defineProps<{
         stylesheet: SkinChunk

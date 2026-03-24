@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, ref } from "vue";
     import JSZip from "jszip";
-    import { FolderDown, Check, Trash2, FileText } from "lucide-vue-next";
+    import { FolderDown, Check, Trash2, FileText } from "@lucide/vue";
     import { downloadFile, getFileSizeWithUnit } from "@/functions/file-utils";
     import { GeneratedSkin } from "@/models/GeneratedSkin";
     import ThemeResultDetails from "@/pages/editor/ThemeResultDetails.vue";

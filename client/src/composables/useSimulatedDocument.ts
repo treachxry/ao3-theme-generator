@@ -16,11 +16,6 @@ export function useSimulatedDocument(html: Readonly<Ref<string>>): ISimulatedDoc
         const sheet = new CSSStyleSheet();
 
         sheet.replaceSync(`
-            :host {
-                all: initial;
-                display: block;
-            }
-
             .${HTML_WRAPPER_CLASS} {
                 height: 100%;
             }
